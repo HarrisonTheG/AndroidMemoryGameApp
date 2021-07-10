@@ -21,6 +21,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         playButton.setOnClickListener(this);
     }
 
+    //testing
     @Override
     public void onClick(View view) {
         int id = view.getId();
