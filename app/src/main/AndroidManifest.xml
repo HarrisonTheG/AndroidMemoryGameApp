@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.T11MemoryGame"
         android:screenOrientation="portrait">
+        <service android:name=".service.BGMusicService" />
         <activity android:name=".activity.GameActivity"></activity>
         <activity android:name=".activity.SearchImageActivity" />
         <activity android:name=".activity.HomeActivity">
