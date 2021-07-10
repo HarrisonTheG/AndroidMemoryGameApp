@@ -4,17 +4,110 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top">
+    android:gravity="top"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
+    //sound mute toggle
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="top|right"
+        android:id="@+id/flipToggle"
+        app:autoFlipBack="false"
+        app:flipDuration="400"
+        app:flipEnabled="true"
+        app:flipFrom="right"
+        app:flipOnTouch="false"
+        app:flipType="horizontal">
+
+        <!-- Back Layout Goes Here music on-->
+        <ImageView
+            android:id="@+id/soundToggle_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="@drawable/speaker"
+            android:clickable="false"
+            android:scaleType="fitXY" />
+
+        <!-- Front Layout Goes Here music off -->
+        <ImageView
+            android:id="@+id/soundToggle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="false"
+            android:background="@drawable/mute"
+            android:clickable="false"
+            android:scaleType="fitXY" />
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+    //App logo
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        ></ImageView>
     //Play button
     <Button
         android:id="@+id/play"
+        android:background="#FF6075"
+        android:textColor="@color/white"
+        android:textSize="20dp"
         android:layout_width="128dp"
         android:layout_height="60dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="150dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:text="@string/play"
         />
+
+    //score and no of games played
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="40dp">
+
+        <TextView
+            style="@style/home_text"
+            android:text="@string/best_score"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"></TextView>
+        <TextView
+            android:id="@+id/bestScore"
+            style="@style/home_text"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp">
+
+        <TextView
+            style="@style/home_text"
+            android:text="@string/total_games"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"></TextView>
+        <TextView
+            android:id="@+id/totalGames"
+            style="@style/home_text"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"></TextView>
+    </LinearLayout>
 
 </LinearLayout>
