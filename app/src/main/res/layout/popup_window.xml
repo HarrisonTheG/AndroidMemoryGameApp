@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#abcdef"
+    android:shadowColor="@color/black"
+    android:layout_gravity="center_vertical"
+    android:padding="12px"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="30dp"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:text="You Won!"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/restart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="25dp"
+            android:onClick="onClick"
+            android:layout_weight="0.5"
+            android:text="Restart" />
+
+        <Button
+            android:id="@+id/newgame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/restart"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="100dp"
+            android:onClick="onClick"
+            android:layout_weight="0.5"
+            android:text="New Game" />
+
+    </RelativeLayout>
+</RelativeLayout>
