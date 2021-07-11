@@ -11,11 +11,8 @@ import iss.project.t11memorygame.R;
 
 public class BGMusicService extends Service {
     MediaPlayer BGMusicPlayer;
-    //IN ACTIVITY:
-    //if user choose to mute this attr. (IS_MUTED)become true.
-    //Then service becomes unbind also.
-    //Boolean IS_MUTED = false ;
 
+    //Create singleton class
     //use binder to connect service and activity
     private final IBinder binder = new LocalBinder();
     public class LocalBinder extends Binder {
@@ -29,6 +26,8 @@ public class BGMusicService extends Service {
         Log.i("MusicLog", "BackgroundMusicService -> onBind, Thread: " + Thread.currentThread().getName());
         return binder;
     }
+
+    //unbind music disconnect service object with activity can still resume
     @Override
     public boolean onUnbind(Intent intent){
         Log.i("MusicLog", "BackgroundMusicService -> onUnBind");
@@ -44,7 +43,7 @@ public class BGMusicService extends Service {
 
     public void playMusic(String scene){
         if(BGMusicPlayer != null) {
-            BGMusicPlayer.reset();
+            //BGMusicPlayer.reset();
             //BGMusicPlayer.release();
             //BGMusicPlayer = null;
         }

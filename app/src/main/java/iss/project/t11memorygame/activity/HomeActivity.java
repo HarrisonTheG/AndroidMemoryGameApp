@@ -23,6 +23,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private boolean IS_MUSIC_ON = true;
     private BGMusicService bgMusicService;
     private EasyFlipView musicImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             Intent music = new Intent(this, BGMusicService.class);
             bindService(music, this, BIND_AUTO_CREATE);
         }
+
     }
 
     @Override
@@ -51,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //navigation to browse image page
         if(id == R.id.play){
             Intent intent = new Intent(this, SearchImageActivity.class);
+            intent.putExtra("isMusicOn", IS_MUSIC_ON);
             startActivity(intent);
         }
         //background music toggle
@@ -62,13 +65,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Intent music = new Intent(this, BGMusicService.class);
                 bindService(music, this, BIND_AUTO_CREATE);
                 IS_MUSIC_ON = true;
-                Toast.makeText(getApplicationContext(),"Music muted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Music unmuted",Toast.LENGTH_SHORT).show();
             }else{
                 IS_MUSIC_ON = false;
                 bgMusicService.mute();
                 unbindService(this);
-                Toast.makeText(getApplicationContext(),"Music unmuted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Music muted",Toast.LENGTH_SHORT).show();
             }
+
         }
 
     }

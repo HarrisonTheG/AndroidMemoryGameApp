@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.T11MemoryGame"
         android:screenOrientation="portrait">
+
         <service android:name=".service.BGMusicService" />
-        <activity android:name=".activity.GameActivity"></activity>
-        <activity android:name=".activity.SearchImageActivity" />
+
         <activity android:name=".activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.GameActivity"></activity>
+        <activity android:name=".activity.SearchImageActivity" />
 
     </application>
 
