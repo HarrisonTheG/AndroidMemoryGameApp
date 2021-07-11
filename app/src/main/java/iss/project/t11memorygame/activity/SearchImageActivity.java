@@ -45,7 +45,6 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                //Toast.makeText(MainActivity.this,"you clicked on: "+flowerName[position]+position,Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(),"Tapped",Toast.LENGTH_SHORT).show();
                 chosen.add(drawables[position]);
                 view.setOnClickListener(null);
