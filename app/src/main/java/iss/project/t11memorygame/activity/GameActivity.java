@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,6 +41,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
 
+
+
+//    Chronometer chronometer;
+//    private long time;
+
     //dummy images, can remove
 //    final int[] drawable=new int[]{
 //            R.drawable.r15,
@@ -59,6 +65,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        TextView tv=(TextView)findViewById(R.id.timer) ;
+        CountDownTimer timer=new CountDownTimer(60000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv.setText(" You left "+millisUntilFinished/1000+" S ");
+            }
+
+            @Override
+            public void onFinish() {
+                tv.setText("Time is out");
+            }
+        }.start();
+
+
+
+////        countup timer
+//        chronometer=findViewById(R.id.timer);
+//        chronometer.setBase(SystemClock.elapsedRealtime());
+//        time=SystemClock.elapsedRealtime();
+//        chronometer.start();
+
+
 
         //get the images from the SearchImageActivity
         Intent intent = getIntent();
@@ -233,5 +262,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
     }
+
 
 }
