@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -19,12 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
@@ -37,14 +36,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     //int[]drawable=chosen.stream().mapToInt(i->i).toArray();
 
-    final int[] drawable=new int[]{
-            R.drawable.r15,
-            R.drawable.r3,
-            R.drawable.r1,
-            R.drawable.monster,
-            R.drawable.v2,
-            R.drawable.s1000rr
-    };
+//    final int[] drawable=new int[]{
+//            R.drawable.r15,
+//            R.drawable.r3,
+//            R.drawable.r1,
+//            R.drawable.monster,
+//            R.drawable.v2,
+//            R.drawable.s1000rr
+//    };
 
     //setup the images so that there is 2 with the same number
     Integer[] pos={0,1,2,3,4,5,0,1,2,3,4,5};
@@ -56,6 +55,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        Intent intent=getIntent();
+        ArrayList<Integer> chosenimages=intent.getIntegerArrayListExtra("images");
+        int[] drawable=chosenimages.stream().mapToInt(i->i).toArray();
 
         //shuffle the images based on the position
         List<Integer> intList= Arrays.asList(pos);
