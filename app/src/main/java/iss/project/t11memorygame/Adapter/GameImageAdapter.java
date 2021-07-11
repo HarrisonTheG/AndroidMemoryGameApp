@@ -1,4 +1,4 @@
-package iss.project.t11memorygame.activity;
+package iss.project.t11memorygame.Adapter;
 
 import android.content.Context;
 import android.view.View;
