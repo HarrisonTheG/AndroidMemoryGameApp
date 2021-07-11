@@ -3,7 +3,9 @@ package iss.project.t11memorygame.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.wajahatkarim3.easyflipview.EasyFlipView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,12 +29,16 @@ import java.util.List;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
-import iss.project.t11memorygame.model.ChosenImage;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView curView = null;
     private int countPair = 0;
+    private EasyFlipView flipImage;
+    private int numberofAttemps=0;
+    private int playerOneScore=0;
+    private int playerTwoScore=0;
+    private boolean playerOneTurn=true;
 
     //dummy images, can remove
 //    final int[] drawable=new int[]{
@@ -41,7 +49,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //            R.drawable.v2,
 //            R.drawable.s1000rr
 //    };
-    final int[] restartgamewithsamedrawable=new int[]{};
 
     //setup the images so that there is 2 with the same number
     Integer[] pos = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5};
@@ -71,6 +78,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         GameImageAdapter imageAdapter = new GameImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
+        if(playerOneTurn){
+            TextView p1score=findViewById(R.id.p1score);
+            p1score.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+
         //Set onclicklistener for each button
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,6 +95,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 if (currentPosition < 0) {
                     currentPosition = position;
                     curView = (ImageView) view;
+
+//                    flipImage=(EasyFlipView) findViewById(R.id.grid_image);
+//                    ImageView frontview=findViewById(R.id.front);
+//                    frontview.setImageResource(drawable[pos[position]]);
+//                    ImageView backview=findViewById(R.id.back);
+//                    backview.setImageResource(R.drawable.logo);
+//                    flipImage.flipTheView();
+
                     ((ImageView) view).setImageResource(drawable[pos[position]]);
                     Toast.makeText(getApplicationContext(), "First Click: Position is: " + position + "CurrentPosition is: " + currentPosition, Toast.LENGTH_SHORT).show();
                     System.out.println("First Click: Position is: " + position + "CurrentPosition is: " + currentPosition);
@@ -91,15 +111,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 else {
                     //if reclick the same image- will hide
                     if (currentPosition == position) {
-                        ((ImageView) view).setImageResource(R.drawable.hidden);
+                        ((ImageView) view).setImageResource(R.drawable.logo);
                         Toast.makeText(getApplicationContext(), "This is 2nd tap ", Toast.LENGTH_SHORT).show();
                         System.out.println("you click the same image, current position is: " + currentPosition + "This image position is: " + position);
                     }
                     //if you click different image -tohide
                     else if (pos[currentPosition] != pos[position]) {
-                        //((ImageView)view).setImageResource(drawable[pos[position]]);
-                        curView.setImageResource(R.drawable.hidden);
-                        Toast.makeText(getApplicationContext(), "notmatch", Toast.LENGTH_SHORT).show();
+                        ((ImageView)view).setImageResource(drawable[pos[position]]);
+                        Handler handler=new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                curView.setImageResource(R.drawable.logo);
+                                ((ImageView)view).setImageResource(R.drawable.logo);
+                            }
+                        },300);
+                         Toast.makeText(getApplicationContext(), "notmatch", Toast.LENGTH_SHORT).show();
                         System.out.println("Something is oepn, but didnt match, opened is : " + currentPosition + "   what you tapped is " + position);
                     }
                     //if you click the correct image
@@ -122,7 +149,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             onButtonShowPopupWindowClick(view);
                         }
                     }
+                    //Calculate nuber of attemps
+                    ++numberofAttemps;
                     currentPosition = -1;
+                    TextView attempstext=findViewById(R.id.attempts);
+                    attempstext.setText("Total Attempts: "+numberofAttemps);
+
+                    //go to p2 and set
+                    if(playerOneTurn)
+                        playerOneTurn=false;
+                    else
+                        playerOneTurn=true;
+                    TextView p1score=findViewById(R.id.p1score);
+                    TextView p2score=findViewById(R.id.p2score);
+                    if(playerOneTurn){
+                        p1score.setTypeface(Typeface.DEFAULT_BOLD);
+                        p2score.setTypeface(Typeface.DEFAULT);
+                    }
+                    else{
+                        p2score.setTypeface(Typeface.DEFAULT_BOLD);
+                        p1score.setTypeface(Typeface.DEFAULT);
+                    }
                 }
             }
         });
@@ -185,7 +232,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
             finish();
         }
-
-
     }
+
 }

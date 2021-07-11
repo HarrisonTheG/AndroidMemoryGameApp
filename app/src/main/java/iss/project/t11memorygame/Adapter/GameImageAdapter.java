@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.wajahatkarim3.easyflipview.EasyFlipView;
+
 import iss.project.t11memorygame.R;
 
 public class GameImageAdapter extends BaseAdapter {
@@ -41,7 +43,8 @@ public class GameImageAdapter extends BaseAdapter {
         else{
             imageView=(ImageView) convertView;
         }
-        imageView.setImageResource(R.drawable.hidden);
+        imageView.setImageResource(R.drawable.logo);
+
         return imageView;
     }
 

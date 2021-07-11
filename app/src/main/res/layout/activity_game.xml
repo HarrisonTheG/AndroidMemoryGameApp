@@ -11,15 +11,48 @@
         android:id="@+id/matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="30dp"
         android:text="0 Out of 6 Matches"/>
 
+    <TextView
+        android:id="@+id/attempts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="0 Number of tries"
+        android:layout_below="@id/matches"/>
+
+    <TextView
+        android:id="@+id/p1score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="30dp"
+        android:text="P1: 0"
+        android:layout_marginLeft="50px"
+        android:layout_below="@id/attempts"/>
+
+    <TextView
+        android:id="@+id/p2score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="30dp"
+        android:text="P2: 0"
+        android:layout_marginRight="50px"
+        android:layout_below="@id/attempts"/>
+
     <GridView
-        android:layout_below="@+id/matches"
+        android:layout_below="@+id/p1score"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:listSelector="#00343434"
         android:id="@+id/gridView"
         android:numColumns="3"
         android:clickable="true"/>
+
 
 
 </RelativeLayout>
