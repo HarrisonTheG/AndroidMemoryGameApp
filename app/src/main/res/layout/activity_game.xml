@@ -12,21 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30dp"
-        android:text="0 Out of 6 Matches"/>
+        android:typeface="sans"
+        android:text="Matches: 0 /6"/>
 
     <TextView
         android:id="@+id/attempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30dp"
-        android:text="0 Number of tries"
+        android:text="Attempts: 0"
+        android:typeface="sans"
         android:layout_below="@id/matches"/>
-    <TextView
+    <Chronometer
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Timmer"
-        android:textSize="30sp"
+        android:text="Timer"
+        android:textSize="30dp"
+
         android:layout_below="@id/attempts"/>
 
     <TextView
@@ -40,6 +43,7 @@
         android:layout_marginLeft="50px"
         android:layout_below="@id/timer"/>
 
+
     <TextView
         android:id="@+id/p2score"
         android:layout_width="wrap_content"
@@ -48,6 +52,7 @@
         android:layout_alignParentEnd="true"
         android:textSize="30dp"
         android:text="P2: 0"
+        android:typeface="sans"
         android:layout_marginRight="50px"
         android:layout_below="@id/timer"/>
 
