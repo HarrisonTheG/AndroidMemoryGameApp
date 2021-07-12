@@ -32,8 +32,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     //custom variables
     private boolean IS_MUSIC_ON = true;
-    private int totalMatch = 0;
-    private String bestScore;
+    private int totalMatch;
+    private long bestScore;
+
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         loadMatchAndScore();
 
         //making sure sound icon display correctly. Music will always be on when starting
-        if (IS_MUSIC_ON) {
+        if (IS_MUSIC_ON && bgMusicService == null) {
             if(musicImage.isBackSide())
                 musicImage.flipTheView();
             Intent music = new Intent(this, BGMusicService.class);
@@ -90,20 +92,34 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     //load sharedPreference data on number of matches and best score
     protected void loadMatchAndScore(){
 
-        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        pref = getSharedPreferences("userData", Context.MODE_PRIVATE);
 
         totalMatch = pref.getInt("totalMatch", 0);
-        bestScore = pref.getString("bestScore", null);
+        bestScore = pref.getLong("bestScore", 0);
 
         setMatchAndScore();
     }
 
     //set number of matches and best score
     private void setMatchAndScore(){
-        if(bestScore == null)
-            bestScore = "-";
+        if(bestScore == 0)
+            scoreView.setText("-");
+        else{
+            scoreView.setText(timeToString(bestScore));
+        }
         matchView.setText(String.valueOf(totalMatch));
-        scoreView.setText(bestScore);
+
+    }
+
+    //convert long time to String
+    private String timeToString (long time){
+        int hours = (int) (time / 3600000);
+        int minutes = (int) (time - hours * 3600000) / 60000;
+        int seconds = (int) (time - hours * 3600000 - minutes * 60000) / 1000;
+        String duration = minutes + " mins " + seconds + " secs";
+        if(hours == 0)
+            return duration;
+        return hours + " hours " + duration;
     }
 
     //custom music checking class

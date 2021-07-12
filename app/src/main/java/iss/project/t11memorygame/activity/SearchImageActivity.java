@@ -63,6 +63,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
     GridView gridView;
 
+    private Boolean IS_MUSIC_ON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,8 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
         //get from home activity whether music is on
         Intent intent = getIntent();
-        bindMusicService(intent.getBooleanExtra("isMusicOn", false));
+        IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
+        bindMusicService(IS_MUSIC_ON);
 
         int[] drawables = {
                 R.drawable.r15,
@@ -131,6 +133,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         }
 
         intent.putExtra("images", chosenimages);
+        intent.putExtra("isMusicOn", IS_MUSIC_ON);
         startActivity(intent);
     }
 
@@ -232,5 +235,29 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
 
+    }
+
+    //Background music lifecycle and binding
+    //life cycles
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(bgMusicService!=null)
+            bgMusicService.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // restore
+        if(bgMusicService!=null)
+            bgMusicService.resume();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(bgMusicService!=null)
+            unbindService(this);
     }
 }
