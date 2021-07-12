@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
@@ -67,12 +68,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_game);
 
         TextView tv=(TextView)findViewById(R.id.timer) ;
-        CountDownTimer timer=new CountDownTimer(60000,1000) {
+        new CountDownTimer(120*1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tv.setText(" You left "+millisUntilFinished/1000+" S ");
+                tv.setText(" You left "+String.format("0%d : %d ",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
-
             @Override
             public void onFinish() {
                 tv.setText("Time is out");
