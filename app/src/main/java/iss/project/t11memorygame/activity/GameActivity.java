@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
+
+import android.provider.MediaStore;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,6 +42,7 @@ import iss.project.t11memorygame.R;
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView curView = null;
+    private SoundPool soundPool;
     private int countPair = 0;
     private EasyFlipView flipImage;
     private int numberofAttemps=0;
@@ -66,7 +72,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-////        countdown timer
+        //SoundPool for click sound-effect
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(2)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        int clickSound = soundPool.load(this,R.raw.sound1,1);
+
+        //Count-Up timer
+        Chronometer timer = (Chronometer) findViewById(R.id.timer);
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.start();
+
+
+          //countdown timer
 //        TextView tv=(TextView)findViewById(R.id.timer) ;
 //        new CountDownTimer(120*1000,1000) {
 //            @Override
@@ -84,10 +109,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
         //countup timer
         chronometer=findViewById(R.id.timer);
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
+
 
         //get the images from the SearchImageActivity
         Intent intent = getIntent();
@@ -112,11 +139,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             p1score.setTypeface(Typeface.DEFAULT_BOLD);
         }
 
+
         //Set onclicklistener for each button
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                soundPool.play(clickSound,1,1,1,0,1);
                 //for testing purpose: if you want to show popup before game ends:
                 //onButtonShowPopupWindowClick(view);
 
@@ -133,16 +162,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //                    flipImage.flipTheView();
 
                     ((ImageView) view).setImageResource(drawable[pos[position]]);
-                    Toast.makeText(getApplicationContext(), "First Click: Position is: " + position + "CurrentPosition is: " + currentPosition, Toast.LENGTH_SHORT).show();
-                    System.out.println("First Click: Position is: " + position + "CurrentPosition is: " + currentPosition);
+
                 }
                 //1 image already shown
                 else {
                     //if reclick the same image- will hide
                     if (currentPosition == position) {
                         ((ImageView) view).setImageResource(R.drawable.logo);
-                        Toast.makeText(getApplicationContext(), "This is 2nd tap ", Toast.LENGTH_SHORT).show();
-                        System.out.println("you click the same image, current position is: " + currentPosition + "This image position is: " + position);
+
                     }
                     //if you click different image -tohide
                     else if (pos[currentPosition] != pos[position]) {
@@ -155,27 +182,32 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 ((ImageView)view).setImageResource(R.drawable.logo);
                             }
                         },300);
-                         Toast.makeText(getApplicationContext(), "notmatch", Toast.LENGTH_SHORT).show();
-                        System.out.println("Something is oepn, but didnt match, opened is : " + currentPosition + "   what you tapped is " + position);
+
                     }
                     //if you click the correct image
                     else {
-                        Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
+
                         ((ImageView) view).setImageResource(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
-                        System.out.println("you matched, first image position is " + currentPosition + " what you newly opened is " + position);
+
 
                         //disable the onclick when its matched
                         curView.setOnClickListener(null);
                         view.setOnClickListener(null);
+
+                        if(playerOneTurn)
+                            ++playerOneScore;
+                        else
+                            ++playerTwoScore;
 
                         //if all matched- show popup button
                         if (countPair == drawable.length) {
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
                             //show popup box when you win
                             onButtonShowPopupWindowClick(view);
+                            timer.stop();
                         }
                     }
                     //Calculate nuber of attemps
@@ -187,17 +219,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //go to p2 and set
                     if(playerOneTurn)
                         playerOneTurn=false;
+
                     else
                         playerOneTurn=true;
+
                     TextView p1score=findViewById(R.id.p1score);
                     TextView p2score=findViewById(R.id.p2score);
+
                     if(playerOneTurn){
                         p1score.setTypeface(Typeface.DEFAULT_BOLD);
                         p2score.setTypeface(Typeface.DEFAULT);
+                        p1score.setText("P1: "+playerOneScore);
                     }
                     else{
                         p2score.setTypeface(Typeface.DEFAULT_BOLD);
                         p1score.setTypeface(Typeface.DEFAULT);
+                        p2score.setText("P2: "+playerTwoScore);
                     }
                 }
             }
