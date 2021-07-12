@@ -9,6 +9,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,6 +73,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        //SoundPool for click sound-effect
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .setUsage(AudioAttributes.USAGE_GAME)
@@ -83,21 +86,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         int clickSound = soundPool.load(this,R.raw.sound1,1);
 
+        //Count-Up timer
+        Chronometer timer = (Chronometer) findViewById(R.id.timer);
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.start();
 
-        TextView tv=(TextView)findViewById(R.id.timer) ;
-        new CountDownTimer(120*1000,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                tv.setText(" You left "+String.format("0%d : %d ",
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-            }
-            @Override
-            public void onFinish() {
-                tv.setText("Time is out");
-            }
-        }.start();
+
+//        TextView tv=(TextView)findViewById(R.id.timer) ;
+//        new CountDownTimer(120*1000,1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                tv.setText(" You left "+String.format("0%d : %d ",
+//                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+//                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
+//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+//            }
+//            @Override
+//            public void onFinish() {
+//                tv.setText("Time is out");
+//            }
+//        }.start();
 
 
 
@@ -200,6 +208,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
                             //show popup box when you win
                             onButtonShowPopupWindowClick(view);
+                            timer.stop();
                         }
                     }
                     //Calculate nuber of attemps
