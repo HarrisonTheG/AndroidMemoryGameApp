@@ -85,12 +85,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         soundMap.put(2,sp.load(this,R.raw.mismatch,1));
 
 
-        TextView tv=(TextView)findViewById(R.id.timer) ;
-        CountDownTimer timer=new CountDownTimer(60000,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                tv.setText(" You left "+millisUntilFinished/1000+" S ");
-            }
+//        TextView tv=(TextView)findViewById(R.id.timer) ;
+//        CountDownTimer timer=new CountDownTimer(60000,1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                tv.setText(" You left "+millisUntilFinished/1000+" S ");
+//            }
 
         //SoundPool for click sound-effect
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -130,11 +130,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
-        //countup timer
-        chronometer=findViewById(R.id.timer);
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
 
 
         //get the images from the SearchImageActivity
