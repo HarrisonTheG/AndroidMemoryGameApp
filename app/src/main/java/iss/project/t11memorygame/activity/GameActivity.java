@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
+
 import android.provider.MediaStore;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,10 +50,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
 
-
-
-//    Chronometer chronometer;
-//    private long time;
+    Chronometer chronometer;
 
     //dummy images, can remove
 //    final int[] drawable=new int[]{
@@ -92,6 +91,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         timer.start();
 
 
+          //countdown timer
 //        TextView tv=(TextView)findViewById(R.id.timer) ;
 //        new CountDownTimer(120*1000,1000) {
 //            @Override
@@ -109,12 +109,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-////        countup timer
-//        chronometer=findViewById(R.id.timer);
-//        chronometer.setBase(SystemClock.elapsedRealtime());
-//        time=SystemClock.elapsedRealtime();
-//        chronometer.start();
 
+        //countup timer
+        chronometer=findViewById(R.id.timer);
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
 
 
         //get the images from the SearchImageActivity
@@ -230,12 +229,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if(playerOneTurn){
                         p1score.setTypeface(Typeface.DEFAULT_BOLD);
                         p2score.setTypeface(Typeface.DEFAULT);
-                        p1score.setText("P1: "+p1score.getText().toString());
+                        p1score.setText("P1: "+playerOneScore);
                     }
                     else{
                         p2score.setTypeface(Typeface.DEFAULT_BOLD);
                         p1score.setTypeface(Typeface.DEFAULT);
-                        p2score.setText("P2: "+p2score.getText().toString());
+                        p2score.setText("P2: "+playerTwoScore);
                     }
                 }
             }
