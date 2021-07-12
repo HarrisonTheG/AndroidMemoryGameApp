@@ -83,6 +83,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             p1score.setTypeface(Typeface.DEFAULT_BOLD);
         }
 
+
         //Set onclicklistener for each button
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,6 +143,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         curView.setOnClickListener(null);
                         view.setOnClickListener(null);
 
+                        if(playerOneTurn)
+                            ++playerOneScore;
+                        else
+                            ++playerTwoScore;
+
                         //if all matched- show popup button
                         if (countPair == drawable.length) {
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
@@ -158,17 +164,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //go to p2 and set
                     if(playerOneTurn)
                         playerOneTurn=false;
+
                     else
                         playerOneTurn=true;
+
                     TextView p1score=findViewById(R.id.p1score);
                     TextView p2score=findViewById(R.id.p2score);
+
                     if(playerOneTurn){
                         p1score.setTypeface(Typeface.DEFAULT_BOLD);
                         p2score.setTypeface(Typeface.DEFAULT);
+                        p1score.setText("P1: "+p1score.getText().toString());
                     }
                     else{
                         p2score.setTypeface(Typeface.DEFAULT_BOLD);
                         p1score.setTypeface(Typeface.DEFAULT);
+                        p2score.setText("P2: "+p2score.getText().toString());
                     }
                 }
             }
