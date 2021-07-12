@@ -7,12 +7,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,10 +44,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
 
-
-
-//    Chronometer chronometer;
-//    private long time;
+    Chronometer chronometer;
 
     //dummy images, can remove
 //    final int[] drawable=new int[]{
@@ -67,30 +66,28 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        TextView tv=(TextView)findViewById(R.id.timer) ;
-        new CountDownTimer(120*1000,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                tv.setText(" You left "+String.format("0%d : %d ",
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-            }
-            @Override
-            public void onFinish() {
-                tv.setText("Time is out");
-            }
-        }.start();
+////        countdown timer
+//        TextView tv=(TextView)findViewById(R.id.timer) ;
+//        new CountDownTimer(120*1000,1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                tv.setText(" You left "+String.format("0%d : %d ",
+//                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+//                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
+//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+//            }
+//            @Override
+//            public void onFinish() {
+//                tv.setText("Time is out");
+//            }
+//        }.start();
 
 
 
-////        countup timer
-//        chronometer=findViewById(R.id.timer);
-//        chronometer.setBase(SystemClock.elapsedRealtime());
-//        time=SystemClock.elapsedRealtime();
-//        chronometer.start();
-
-
+        //countup timer
+        chronometer=findViewById(R.id.timer);
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
 
         //get the images from the SearchImageActivity
         Intent intent = getIntent();
