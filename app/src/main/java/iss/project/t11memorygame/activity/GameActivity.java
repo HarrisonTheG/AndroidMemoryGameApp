@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -26,6 +28,7 @@ import com.wajahatkarim3.easyflipview.EasyFlipView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
@@ -40,6 +43,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerOneScore=0;
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
+    private SoundPool sp;
+    private HashMap<Integer,Integer> soundMap=new HashMap<>();
 
 
 
@@ -65,6 +70,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
+        soundMap.put(1,sp.load(this,R.raw.match,1));
+        soundMap.put(2,sp.load(this,R.raw.mismatch,1));
+
 
         TextView tv=(TextView)findViewById(R.id.timer) ;
         CountDownTimer timer=new CountDownTimer(60000,1000) {
@@ -146,6 +156,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     //if you click different image -tohide
                     else if (pos[currentPosition] != pos[position]) {
+                        //add mismatch sound effect
+                        sp.play(2,1,1,1,0,1);
                         ((ImageView)view).setImageResource(drawable[pos[position]]);
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
@@ -160,12 +172,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     //if you click the correct image
                     else {
+                        //add match sound effect
+                        sp.play(1,1,1,1,0,1);
+
                         Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
                         ((ImageView) view).setImageResource(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
                         System.out.println("you matched, first image position is " + currentPosition + " what you newly opened is " + position);
+
+
 
                         //disable the onclick when its matched
                         curView.setOnClickListener(null);

@@ -100,7 +100,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                 view.setBackgroundColor(Color.GRAY);
 
                 TextView matchestext = findViewById(R.id.matches);
-                matchestext.setText(chosen.stream().count() + "Out of 6 images");
+                matchestext.setText(chosen.stream().count() + " Out of 6 images");
                 if (chosen.stream().count() == 6) {
                     Toast.makeText(getApplicationContext(), "You have Chosen 6 Images", Toast.LENGTH_SHORT).show();
                     onClick(view);
