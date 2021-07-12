@@ -23,12 +23,12 @@
         android:text="Attempts: 0"
         android:typeface="sans"
         android:layout_below="@id/matches"/>
-    <TextView
+    <Chronometer
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Timmer"
-        android:textSize="30sp"
+        android:text="Timer"
+        android:textSize="20sp"
         android:layout_below="@id/attempts"/>
 
     <TextView
