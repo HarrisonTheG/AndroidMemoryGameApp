@@ -3,14 +3,16 @@ package iss.project.t11memorygame.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wajahatkarim3.easyflipview.EasyFlipView;
@@ -20,22 +22,28 @@ import iss.project.t11memorygame.service.BGMusicService;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
 
-    private boolean IS_MUSIC_ON = true;
+    //services reference
     private BGMusicService bgMusicService;
+
+    //UI element reference
     private EasyFlipView musicImage;
+    private TextView matchView;
+    private TextView scoreView;
+
+    //custom variables
+    private boolean IS_MUSIC_ON = true;
+    private int totalMatch = 0;
+    private String bestScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //register play button
-        Button playButton = (Button) findViewById(R.id.play);
-        playButton.setOnClickListener(this);
 
-        //register the sound icon
-        musicImage = (EasyFlipView) findViewById(R.id.soundToggle);
-        musicImage.setOnClickListener(this);
+        setUIElements();
+
+        loadMatchAndScore();
 
         //making sure sound icon display correctly. Music will always be on when starting
         if (IS_MUSIC_ON) {
@@ -58,23 +66,59 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
         //background music toggle
         else if (id == R.id.soundToggle){
-
             musicImage.flipTheView();
-
-            if(!IS_MUSIC_ON){
-                Intent music = new Intent(this, BGMusicService.class);
-                bindService(music, this, BIND_AUTO_CREATE);
-                IS_MUSIC_ON = true;
-                Toast.makeText(getApplicationContext(),"Music unmuted",Toast.LENGTH_SHORT).show();
-            }else{
-                IS_MUSIC_ON = false;
-                bgMusicService.mute();
-                unbindService(this);
-                Toast.makeText(getApplicationContext(),"Music muted",Toast.LENGTH_SHORT).show();
-            }
-
+            checkMusic();
         }
 
+    }
+
+    //register and connect UI elements on Home Screen
+    protected void setUIElements(){
+        //register play button
+        Button playButton = (Button) findViewById(R.id.play);
+        playButton.setOnClickListener(this);
+
+        //register the sound icon
+        musicImage = (EasyFlipView) findViewById(R.id.soundToggle);
+        musicImage.setOnClickListener(this);
+
+        //register textViews
+        matchView = (TextView) findViewById(R.id.totalGames);
+        scoreView = (TextView) findViewById(R.id.bestScore);
+    }
+
+    //load sharedPreference data on number of matches and best score
+    protected void loadMatchAndScore(){
+
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+
+        totalMatch = pref.getInt("totalMatch", 0);
+        bestScore = pref.getString("bestScore", null);
+
+        setMatchAndScore();
+    }
+
+    //set number of matches and best score
+    private void setMatchAndScore(){
+        if(bestScore == null)
+            bestScore = "-";
+        matchView.setText(String.valueOf(totalMatch));
+        scoreView.setText(bestScore);
+    }
+
+    //custom music checking class
+    protected void checkMusic(){
+        if(!IS_MUSIC_ON){
+            Intent music = new Intent(this, BGMusicService.class);
+            bindService(music, this, BIND_AUTO_CREATE);
+            IS_MUSIC_ON = true;
+            Toast.makeText(getApplicationContext(),"Music unmuted",Toast.LENGTH_SHORT).show();
+        }else{
+            IS_MUSIC_ON = false;
+            bgMusicService.mute();
+            unbindService(this);
+            Toast.makeText(getApplicationContext(),"Music muted",Toast.LENGTH_SHORT).show();
+        }
     }
 
 

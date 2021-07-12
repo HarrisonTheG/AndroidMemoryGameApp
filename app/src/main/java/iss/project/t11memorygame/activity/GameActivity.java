@@ -211,7 +211,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             timer.stop();
                         }
                     }
-                    //Calculate nuber of attemps
+                    //Calculate number of attempts
                     ++numberofAttemps;
                     currentPosition = -1;
                     TextView attempstext=findViewById(R.id.attempts);
