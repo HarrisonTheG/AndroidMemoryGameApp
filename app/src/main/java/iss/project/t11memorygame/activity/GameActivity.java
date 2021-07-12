@@ -230,12 +230,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if(playerOneTurn){
                         p1score.setTypeface(Typeface.DEFAULT_BOLD);
                         p2score.setTypeface(Typeface.DEFAULT);
-                        p1score.setText("P1: "+p1score.getText().toString());
+                        p1score.setText("P1: "+playerOneScore);
                     }
                     else{
                         p2score.setTypeface(Typeface.DEFAULT_BOLD);
                         p1score.setTypeface(Typeface.DEFAULT);
-                        p2score.setText("P2: "+p2score.getText().toString());
+                        p2score.setText("P2: "+playerTwoScore);
                     }
                 }
             }
