@@ -46,7 +46,7 @@ public class SearchImageAdapter extends BaseAdapter {
         if(convertView==null){
             //convertView=layoutInflater.inflate(R.layout.image_list,parent,false);
             imageView=new ImageView(this.context);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(350,350));
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(250,250));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         }
         else{

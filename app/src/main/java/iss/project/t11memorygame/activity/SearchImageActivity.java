@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -15,12 +17,33 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 import iss.project.t11memorygame.Adapter.SearchImageAdapter;
 import iss.project.t11memorygame.R;
@@ -33,6 +56,13 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
     ArrayList<Integer> chosen = new ArrayList<>();
 
     private BGMusicService bgMusicService;
+
+    EditText imgUrl;
+
+    Button fetchButton;
+
+    GridView gridView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +87,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
 
         //initialise the gridview images
-        GridView gridView = (GridView) findViewById(R.id.gridViewImagesToChoose);
+        gridView = (GridView) findViewById(R.id.gridViewImagesToChoose);
         SearchImageAdapter imageAdapter = new SearchImageAdapter(this, drawables);
         gridView.setAdapter(imageAdapter);
 
@@ -77,6 +107,17 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+
+        imgUrl=(EditText) findViewById(R.id.ImgUrl);
+
+        fetchButton=(Button) findViewById(R.id.Fetch);
+        fetchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(runnable).start();
+            }
+        });
+
     }
 
 
@@ -91,6 +132,82 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
         intent.putExtra("images", chosenimages);
         startActivity(intent);
+    }
+
+
+    //after android 9, requesting HTTP is not allowed in the main thread, so need to create a sub-thread to request for image resources
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            try {
+                fetch();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    //this method is to disable the SSL, in case of the SSLHandShakeException
+    public static void trustEveryone() {
+        try {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[] { new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            } }, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+    }
+
+    protected void fetch() throws IOException {
+        String url=imgUrl.getText().toString();
+        trustEveryone();
+        Document htmlResource = Jsoup.connect(url).get();
+        Elements Images = htmlResource.getElementsByTag("img");
+        int count=0;
+        for(Element img : Images){
+            String imgSrc = img.attr("src");
+            if (!"".equals(imgSrc) && (imgSrc.startsWith("http://") || imgSrc.startsWith("https://"))) {
+                System.out.println("正在下载的图片的地址：" + imgSrc);
+                URL imgPath = new URL(imgSrc);
+                HttpURLConnection conn = (HttpURLConnection) imgPath.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.addRequestProperty("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
+                if (conn.getResponseCode() == 200) {
+                    System.out.println("Connection succeed");
+                    InputStream inputStream = conn.getInputStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    ImageView imageView=(ImageView) gridView.getAdapter().getView(0,null,null);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+//                    saveToInternalStorage(bitmap);
+                    count++;
+                }
+            }
+            if (count==8){
+                break;
+            }
+        }
     }
 
 

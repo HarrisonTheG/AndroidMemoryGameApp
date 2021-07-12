@@ -1,25 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.SearchImageActivity"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
-    >
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/matches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="0 out of 6 images selected"/>
+    <RelativeLayout
+        android:layout_height="wrap_content" android:orientation="horizontal"
+        android:layout_width="fill_parent">
 
-    <GridView
-        android:layout_below="@+id/matches"
+        <Button
+            android:text="fetch"
+            android:id="@+id/Fetch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+        </Button>
+
+        <EditText
+            android:id="@+id/ImgUrl"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/Fetch"
+            android:layout_width="fill_parent">
+        </EditText>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridViewImagesToChoose"
-        android:numColumns="3"
-        android:clickable="true"/>
+        tools:context=".MainActivity"
+        android:orientation="vertical"
+        >
 
-</RelativeLayout>
+
+
+
+        <TextView
+            android:id="@+id/matches"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0 out of 6 images selected"/>
+
+        <GridView
+            android:layout_below="@+id/matches"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/gridViewImagesToChoose"
+            android:numColumns="4"
+            android:verticalSpacing="30dp"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"/>
+
+    </RelativeLayout>
+</LinearLayout>

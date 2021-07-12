@@ -38,4 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:3.0.0'
+    implementation 'org.jsoup:jsoup:1.8.3'
 }
