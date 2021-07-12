@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+
+import android.media.AudioManager;
+
 import android.media.AudioAttributes;
+
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -33,6 +37,7 @@ import com.wajahatkarim3.easyflipview.EasyFlipView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +54,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerOneScore=0;
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
+    private SoundPool sp;
+    private HashMap<Integer,Integer> soundMap=new HashMap<>();
 
     Chronometer chronometer;
 
@@ -72,6 +79,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+        sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
+        soundMap.put(1,sp.load(this,R.raw.match,1));
+        soundMap.put(2,sp.load(this,R.raw.mismatch,1));
+
+
+        TextView tv=(TextView)findViewById(R.id.timer) ;
+        CountDownTimer timer=new CountDownTimer(60000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv.setText(" You left "+millisUntilFinished/1000+" S ");
+            }
+
         //SoundPool for click sound-effect
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -89,6 +109,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Chronometer timer = (Chronometer) findViewById(R.id.timer);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
+
 
 
           //countdown timer
@@ -173,6 +194,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     //if you click different image -tohide
                     else if (pos[currentPosition] != pos[position]) {
+                        //add mismatch sound effect
+                        sp.play(2,1,1,1,0,1);
                         ((ImageView)view).setImageResource(drawable[pos[position]]);
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
@@ -187,10 +210,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //if you click the correct image
                     else {
 
+                        //add match sound effect
+                        sp.play(1,1,1,1,0,1);
+
+                        Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
+
+
                         ((ImageView) view).setImageResource(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
+
+
 
 
                         //disable the onclick when its matched
