@@ -1,6 +1,7 @@
 package iss.project.t11memorygame.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class SearchImageAdapter extends BaseAdapter {
         imageView.findViewById(R.id.grid_image);
         imageView.setImageResource(image[position]);
 
+        //imageView.setImageBitmap(image[position]);
         return imageView;
     }
 }
