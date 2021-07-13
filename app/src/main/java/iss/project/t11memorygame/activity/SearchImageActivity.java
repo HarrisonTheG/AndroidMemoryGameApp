@@ -95,6 +95,9 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                 R.drawable.gs1200
         };
 
+        bar = findViewById(R.id.progressbar);
+        progressText = findViewById(R.id.progressText);
+
 
         //initialise the gridview images
         gridView = (GridView) findViewById(R.id.gridViewImagesToChoose);
@@ -132,6 +135,9 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
 
     }
+
+
+    private TextView progressText;
 
 
     @Override
