@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +32,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -57,12 +62,15 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
     private BGMusicService bgMusicService;
 
-    EditText imgUrl;
+    private EditText imgUrl;
 
-    Button fetchButton;
+    private Button fetchButton;
 
-    GridView gridView;
+    private GridView gridView;
 
+    private ProgressBar bar;
+
+    private Boolean IS_MUSIC_ON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +80,8 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
         //get from home activity whether music is on
         Intent intent = getIntent();
-        bindMusicService(intent.getBooleanExtra("isMusicOn", false));
+        IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
+        bindMusicService(IS_MUSIC_ON);
 
         int[] drawables = {
                 R.drawable.r15,
@@ -118,6 +127,9 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        bar=(ProgressBar) findViewById(R.id.bar);
+
+
     }
 
 
@@ -131,6 +143,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         }
 
         intent.putExtra("images", chosenimages);
+        intent.putExtra("isMusicOn", IS_MUSIC_ON);
         startActivity(intent);
     }
 
@@ -194,14 +207,19 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                     InputStream inputStream = conn.getInputStream();
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     ImageView imageView=(ImageView) gridView.getAdapter().getView(0,null,null);
+                    int finalCount = count+1;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             imageView.setImageBitmap(bitmap);
+                            TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
+                            downloadingStatus.setText("Downloading "+ finalCount +" of 8 images...");
                         }
                     });
-//                    saveToInternalStorage(bitmap);
                     count++;
+                    saveBitmap(bitmap,"Image"+count);
+                    bar.setProgress(count);
+
                 }
             }
             if (count==8){
@@ -209,6 +227,19 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
+
+    public void saveBitmap(Bitmap bm,String fileName){
+        String path = this.getFilesDir() + File.separator + fileName+".png";
+        System.out.println(path);
+        try{
+            OutputStream os = new FileOutputStream(path);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
 //-- Background Music Task
@@ -232,5 +263,29 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
 
+    }
+
+    //Background music lifecycle and binding
+    //life cycles
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(bgMusicService!=null)
+            bgMusicService.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // restore
+        if(bgMusicService!=null)
+            bgMusicService.resume();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(bgMusicService!=null)
+            unbindService(this);
     }
 }

@@ -2,13 +2,22 @@ package iss.project.t11memorygame.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+
+import android.media.AudioManager;
+
 import android.media.AudioAttributes;
+
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.SystemClock;
 
 import android.provider.MediaStore;
@@ -33,13 +42,15 @@ import com.wajahatkarim3.easyflipview.EasyFlipView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
+import iss.project.t11memorygame.service.BGMusicService;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
 
     ImageView curView = null;
     private SoundPool soundPool;
@@ -49,7 +60,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int playerOneScore=0;
     private int playerTwoScore=0;
     private boolean playerOneTurn=true;
+    private SoundPool sp;
+    private HashMap<Integer,Integer> soundMap=new HashMap<>();
 
+    private int prevMatchCount;
+    private long prevBestScore;
+    private Boolean IS_MUSIC_ON;
+    private BGMusicService bgMusicService;
+    SharedPreferences pref;
+
+    PopupWindow popupWindow;
+    View popupView;
+    private long elapsedMillis;
     Chronometer chronometer;
 
     //dummy images, can remove
@@ -72,6 +94,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+        //get from home activity whether music is on
+        Intent intent = getIntent();
+        IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
+        bindMusicService(IS_MUSIC_ON);
+
+
+        sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
+        soundMap.put(1,sp.load(this,R.raw.match,1));
+        soundMap.put(2,sp.load(this,R.raw.mismatch,1));
+
+
+//        TextView tv=(TextView)findViewById(R.id.timer) ;
+//        CountDownTimer timer=new CountDownTimer(60000,1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                tv.setText(" You left "+millisUntilFinished/1000+" S ");
+//            }
+
+
         //SoundPool for click sound-effect
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -85,10 +127,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         int clickSound = soundPool.load(this,R.raw.sound1,1);
 
-        //Count-Up timer
-        Chronometer timer = (Chronometer) findViewById(R.id.timer);
-        timer.setBase(SystemClock.elapsedRealtime());
-        timer.start();
 
 
           //countdown timer
@@ -110,14 +148,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        //countup timer
+
+        //count-up timer
         chronometer=findViewById(R.id.timer);
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
 
 
+
         //get the images from the SearchImageActivity
-        Intent intent = getIntent();
+
         ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
         int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
 
@@ -173,6 +213,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     //if you click different image -tohide
                     else if (pos[currentPosition] != pos[position]) {
+                        //add mismatch sound effect
+                        sp.play(2,1,1,1,0,1);
                         ((ImageView)view).setImageResource(drawable[pos[position]]);
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
@@ -187,10 +229,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //if you click the correct image
                     else {
 
+                        //add match sound effect
+                        sp.play(1,1,1,1,0,1);
+
+                        Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
+
+
                         ((ImageView) view).setImageResource(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
+
+
 
 
                         //disable the onclick when its matched
@@ -207,10 +257,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
                             //show popup box when you win
                             onButtonShowPopupWindowClick(view);
-                            timer.stop();
+
+                            //stop timer and save match result
+                            elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+                            saveUserData(elapsedMillis);
+                            chronometer.stop();
                         }
                     }
-                    //Calculate nuber of attemps
+                    //Calculate number of attempts
                     ++numberofAttemps;
                     currentPosition = -1;
                     TextView attempstext=findViewById(R.id.attempts);
@@ -246,13 +300,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
+        popupView = inflater.inflate(R.layout.popup_window, null);
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window token
@@ -294,9 +348,81 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         else if (id == R.id.newgame) {
-            Intent intent = new Intent(this, SearchImageActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
+
             startActivity(intent);
             finish();
+        }
+    }
+
+    //update user Data on total Matches and bestScore based on time elapse
+    protected void saveUserData(long duration){
+        getUserData();
+        SharedPreferences.Editor editor = pref.edit();
+
+        //update best score if duration is shorter than previous score or first time playing
+        if((prevBestScore != 0 && prevBestScore > duration) || prevBestScore == 0){
+            editor.putLong("bestScore", duration);
+        }
+        editor.putInt("totalMatch", prevMatchCount + 1);
+        editor.commit();
+    }
+
+    //get previous user saved data on shared preferences
+    protected void getUserData (){
+        pref = getSharedPreferences("userData", Context.MODE_PRIVATE);
+        prevMatchCount = pref.getInt("totalMatch", 0);
+        prevBestScore = pref.getLong("bestScore", 0);
+    }
+
+    //Background music lifecycle and binding
+    //life cycles
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(bgMusicService!=null)
+            bgMusicService.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // restore
+        if(bgMusicService!=null)
+            bgMusicService.resume();
+//        else if(IS_MUSIC_ON) {
+//            Intent music = new Intent(this, BGMusicService.class);
+//            bindService(music, this, BIND_AUTO_CREATE);
+//        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(bgMusicService!=null)
+            unbindService(this);
+    }
+
+    //background music connection to bgServiceClass
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder binder) {
+        BGMusicService.LocalBinder musicBinder = (BGMusicService.LocalBinder) binder;
+        if(binder != null) {
+            bgMusicService = musicBinder.getService();
+            bgMusicService.resume();
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+
+    }
+
+    //bind music at beginning
+    protected void bindMusicService(boolean isMusicOn) {
+        if (isMusicOn) {
+            Intent music = new Intent(this, BGMusicService.class);
+            bindService(music, this, BIND_AUTO_CREATE);
         }
     }
 
