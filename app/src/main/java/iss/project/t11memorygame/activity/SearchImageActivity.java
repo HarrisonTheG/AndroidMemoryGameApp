@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.view.View;
 
@@ -30,8 +31,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -203,7 +207,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                             imageView.setImageBitmap(bitmap);
                         }
                     });
-//                    saveToInternalStorage(bitmap);
+                    saveBitmap(bitmap,"Image"+count);
                     count++;
                 }
             }
@@ -212,6 +216,22 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
+
+    public void saveBitmap(Bitmap bm,String fileName){
+        String fn = fileName;
+        String prefix= Environment.DIRECTORY_PICTURES;
+        System.out.println(prefix);
+        String path = this.getFilesDir() + File.separator + fn+".png";
+        System.out.println(path);
+        try{
+            OutputStream os = new FileOutputStream(path);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
 //-- Background Music Task
