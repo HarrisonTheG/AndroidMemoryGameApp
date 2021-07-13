@@ -306,7 +306,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
-        PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window token
@@ -340,6 +340,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.restart) {
+            popupWindow.dismiss();
             finish();
             Intent intent = getIntent();
             ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
@@ -348,6 +349,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         else if (id == R.id.newgame) {
+            popupWindow.dismiss();
             Intent intent = new Intent(this, HomeActivity.class);
 
             startActivity(intent);
