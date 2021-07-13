@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,11 +62,13 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
 
     private BGMusicService bgMusicService;
 
-    EditText imgUrl;
+    private EditText imgUrl;
 
-    Button fetchButton;
+    private Button fetchButton;
 
-    GridView gridView;
+    private GridView gridView;
+
+    private ProgressBar bar;
 
     private Boolean IS_MUSIC_ON;
 
@@ -123,6 +126,9 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                 new Thread(runnable).start();
             }
         });
+
+        bar=(ProgressBar) findViewById(R.id.bar);
+
 
     }
 
@@ -201,14 +207,19 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                     InputStream inputStream = conn.getInputStream();
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     ImageView imageView=(ImageView) gridView.getAdapter().getView(0,null,null);
+                    int finalCount = count+1;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             imageView.setImageBitmap(bitmap);
+                            TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
+                            downloadingStatus.setText("Downloading "+ finalCount +" of 8 images...");
                         }
                     });
-                    saveBitmap(bitmap,"Image"+count);
                     count++;
+                    saveBitmap(bitmap,"Image"+count);
+                    bar.setProgress(count);
+
                 }
             }
             if (count==8){
@@ -218,10 +229,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void saveBitmap(Bitmap bm,String fileName){
-        String fn = fileName;
-        String prefix= Environment.DIRECTORY_PICTURES;
-        System.out.println(prefix);
-        String path = this.getFilesDir() + File.separator + fn+".png";
+        String path = this.getFilesDir() + File.separator + fileName+".png";
         System.out.println(path);
         try{
             OutputStream os = new FileOutputStream(path);

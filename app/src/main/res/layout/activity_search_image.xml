@@ -6,7 +6,8 @@
     android:padding="5dp">
 
     <RelativeLayout
-        android:layout_height="wrap_content" android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_width="fill_parent">
 
         <Button
@@ -34,9 +35,6 @@
         android:orientation="vertical"
         >
 
-
-
-
         <TextView
             android:id="@+id/matches"
             android:layout_width="match_parent"
@@ -49,9 +47,26 @@
             android:layout_height="match_parent"
             android:id="@+id/gridViewImagesToChoose"
             android:numColumns="4"
-            android:verticalSpacing="30dp"
             android:layout_centerHorizontal="true"
             android:clickable="true"/>
+
+        <ProgressBar
+            android:id="@+id/bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="8"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"/>
+
+        <TextView
+            android:id="@+id/downloadingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Downloading 0 of 8 images..."
+            android:layout_alignParentBottom="true"
+            />
+
 
     </RelativeLayout>
 </LinearLayout>
