@@ -3,6 +3,7 @@ package iss.project.t11memorygame.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
@@ -205,20 +206,23 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                 if (conn.getResponseCode() == 200) {
                     System.out.println("Connection succeed");
                     InputStream inputStream = conn.getInputStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    ImageView imageView=(ImageView) gridView.getAdapter().getView(0,null,null);
                     int finalCount = count+1;
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    String path=saveBitmap(bitmap,"Image"+finalCount);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            imageView.setImageBitmap(bitmap);
+                            ImageView imageView=(ImageView) gridView.getAdapter().getView(finalCount-1,null,null);
+                            Bitmap bitmap1=BitmapFactory.decodeFile(path);
+                            imageView.setImageBitmap(bitmap1);
                             TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
                             downloadingStatus.setText("Downloading "+ finalCount +" of 8 images...");
+
                         }
                     });
                     count++;
-                    saveBitmap(bitmap,"Image"+count);
                     bar.setProgress(count);
+
 
                 }
             }
@@ -228,7 +232,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public void saveBitmap(Bitmap bm,String fileName){
+    public String saveBitmap(Bitmap bm,String fileName){
         String path = this.getFilesDir() + File.separator + fileName+".png";
         System.out.println(path);
         try{
@@ -238,6 +242,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         }catch(Exception e){
             e.printStackTrace();
         }
+        return path;
     }
 
 
