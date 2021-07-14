@@ -248,16 +248,17 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     //navigate to game activity
     public void navigateToGame() {
         Intent intent = new Intent(this, GameActivity.class);
-        ArrayList<Image> chosenImages = new ArrayList<Image>();
-
-        //send array of objects to next activity using bundle
-        Bundle args = new Bundle();
-        args.putSerializable("chosenImages",(Serializable) chosenImages);
-        intent.putExtra("bundle", args);
+        ArrayList<Integer> chosenImages = new ArrayList<Integer>();
 
         for (Integer i : chosen) {
-            chosenImages.add(images.get(i));
+            chosenImages.add(images.get(i).getPosID());
         }
+        //send array of objects to next activity using bundle
+//        Bundle args = new Bundle();
+//        args.putSerializable("chosenImages",(Serializable) chosenImages);
+//        intent.putExtra("bundle", args);
+            intent.putExtra("chosenImages", chosenImages);
+
 
         intent.putExtra("isMusicOn", IS_MUSIC_ON);
         startActivity(intent);

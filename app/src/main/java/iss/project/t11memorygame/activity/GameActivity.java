@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 
 import android.media.AudioManager;
@@ -17,6 +18,7 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -40,6 +42,7 @@ import android.widget.Toast;
 
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
+import iss.project.t11memorygame.model.Image;
 import iss.project.t11memorygame.service.BGMusicService;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
@@ -79,6 +83,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     Integer[] pos = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5};
 
     int currentPosition = -1;
+    ArrayList<Bitmap> bitmapImages = new ArrayList<Bitmap>();
+    Bitmap[] drawable=new Bitmap[12];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +93,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         //Get the arraylist of Images chosen
         Intent intent = getIntent();
-        Bundle args = intent.getBundleExtra("BUNDLE");
-        ArrayList<Object> images = (ArrayList<Object>) args.getSerializable("chosenImages");
+        //Bundle args = intent.getBundleExtra("BUNDLE");
+        //ArrayList<Image> images = (ArrayList<Image>) args.getSerializable("chosenImages");
+        ArrayList<Integer> images = intent.getIntegerArrayListExtra("chosenImages");
 
         //get from home activity whether music is on
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
@@ -125,8 +132,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         //get the images from the SearchImageActivity
 
-        ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
-        //Bitmap[] drawable=new Bitmap[]{};
+        //load bitmap images from searchImageActivity
+        loadBitmapImages(images);
+        //ArrayList<Bitmap> chosenimages = intent.getIntegerArrayListExtra("images");
+
         //int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
 
         //shuffle the images based on the position
@@ -169,7 +178,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //                    backview.setImageResource(R.drawable.logo);
 //                    flipImage.flipTheView();
 
-                    ((ImageView) view).setImageResource(drawable[pos[position]]);
+                    ((ImageView) view).setImageBitmap(drawable[pos[position]]);
 
                 }
                 //1 image already shown
@@ -183,7 +192,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     else if (pos[currentPosition] != pos[position]) {
                         //add mismatch sound effect
                         sp.play(2,1,1,1,0,1);
-                        ((ImageView)view).setImageResource(drawable[pos[position]]);
+                        ((ImageView)view).setImageBitmap(drawable[pos[position]]);
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -203,7 +212,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
 
 
-                        ((ImageView) view).setImageResource(drawable[pos[position]]);
+                        ((ImageView) view).setImageBitmap(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
@@ -262,6 +271,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         setupBtns();
+    }
+
+    //load bitmap images
+    public void loadBitmapImages(ArrayList<Integer> intImage){
+
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        for(int i=0; i<intImage.size(); i++) {
+            File destFile = new File(dir, intImage.get(i) +".jpg");
+            Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
+            bitmapImages.add(bitmap);
+        }
+
+        for(int i=0;i<6;i++){
+            drawable[i] = bitmapImages.get(i);
+        }
+        for(int j=6;j<12;j++){
+            drawable[j] = bitmapImages.get(j-6);
+        }
     }
 
     public void onButtonShowPopupWindowClick(View view) {

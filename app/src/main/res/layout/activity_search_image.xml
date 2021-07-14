@@ -18,6 +18,7 @@
         </Button>
 
         <EditText
+            android:text="https://stocksnap.io/search/cat"
             android:id="@+id/ImgUrl"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/Fetch"
