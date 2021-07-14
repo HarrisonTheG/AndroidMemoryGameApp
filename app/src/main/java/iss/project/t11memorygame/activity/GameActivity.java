@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 
 import android.media.AudioManager;
@@ -16,6 +18,7 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -39,6 +42,7 @@ import android.widget.Toast;
 
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 
 import iss.project.t11memorygame.Adapter.GameImageAdapter;
 import iss.project.t11memorygame.R;
+import iss.project.t11memorygame.model.Image;
 import iss.project.t11memorygame.service.BGMusicService;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
@@ -74,44 +79,33 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private long elapsedMillis;
     Chronometer chronometer;
 
-    //dummy images, can remove
-//    final int[] drawable=new int[]{
-//            R.drawable.r15,
-//            R.drawable.r3,
-//            R.drawable.r1,
-//            R.drawable.monster,
-//            R.drawable.v2,
-//            R.drawable.s1000rr
-//    };
-
     //setup the images so that there is 2 with the same number
     Integer[] pos = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5};
 
     int currentPosition = -1;
+    ArrayList<Bitmap> bitmapImages = new ArrayList<Bitmap>();
+    Bitmap[] drawable=new Bitmap[12];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        //Get the arraylist of Images chosen
+        Intent intent = getIntent();
+        //Bundle args = intent.getBundleExtra("BUNDLE");
+        //ArrayList<Image> images = (ArrayList<Image>) args.getSerializable("chosenImages");
+        ArrayList<Integer> images = intent.getIntegerArrayListExtra("chosenImages");
 
         //get from home activity whether music is on
-        Intent intent = getIntent();
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
+
 
 
         sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
         soundMap.put(1,sp.load(this,R.raw.match,1));
         soundMap.put(2,sp.load(this,R.raw.mismatch,1));
-
-
-//        TextView tv=(TextView)findViewById(R.id.timer) ;
-//        CountDownTimer timer=new CountDownTimer(60000,1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                tv.setText(" You left "+millisUntilFinished/1000+" S ");
-//            }
 
 
         //SoundPool for click sound-effect
@@ -129,26 +123,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-          //countdown timer
-//        TextView tv=(TextView)findViewById(R.id.timer) ;
-//        new CountDownTimer(120*1000,1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                tv.setText(" You left "+String.format("0%d : %d ",
-//                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-//                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
-//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-//            }
-//            @Override
-//            public void onFinish() {
-//                tv.setText("Time is out");
-//            }
-//        }.start();
-
-
-
-
-
         //count-up timer
         chronometer=findViewById(R.id.timer);
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -157,8 +131,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //get the images from the SearchImageActivity
-        ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
-        int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
+
+        //load bitmap images from searchImageActivity
+        loadBitmapImages(images);
+        //ArrayList<Bitmap> chosenimages = intent.getIntegerArrayListExtra("images");
+
+        //int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
+
 
         //shuffle the images based on the position
         List<Integer> intList = Arrays.asList(pos);
@@ -186,7 +165,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 soundPool.play(clickSound,1,1,1,0,1);
                 //for testing purpose: if you want to show popup before game ends:
-                //onButtonShowPopupWindowClick(view);
+                onButtonShowPopupWindowClick(view);
 
                 //first click
                 if (currentPosition < 0) {
@@ -200,7 +179,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //                    backview.setImageResource(R.drawable.logo);
 //                    flipImage.flipTheView();
 
-                    ((ImageView) view).setImageResource(drawable[pos[position]]);
+                    ((ImageView) view).setImageBitmap(drawable[pos[position]]);
 
                 }
                 //1 image already shown
@@ -214,7 +193,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     else if (pos[currentPosition] != pos[position]) {
                         //add mismatch sound effect
                         sp.play(2,1,1,1,0,1);
-                        ((ImageView)view).setImageResource(drawable[pos[position]]);
+                        ((ImageView)view).setImageBitmap(drawable[pos[position]]);
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -234,7 +213,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
 
 
-                        ((ImageView) view).setImageResource(drawable[pos[position]]);
+                        ((ImageView) view).setImageBitmap(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
@@ -252,7 +231,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             ++playerTwoScore;
 
                         //if all matched- show popup button
-                        if (countPair == drawable.length) {
+                        if (countPair == 6) {
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
                             //show popup box when you win
                             onButtonShowPopupWindowClick(view);
@@ -296,6 +275,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         //Quit game button
         quitBtn();
+    }
+
+    //load bitmap images
+    public void loadBitmapImages(ArrayList<Integer> intImage){
+
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        for(int i=0; i<intImage.size(); i++) {
+            File destFile = new File(dir, intImage.get(i) +".jpg");
+            Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
+            bitmapImages.add(bitmap);
+        }
+
+        for(int i=0;i<6;i++){
+            drawable[i] = bitmapImages.get(i);
+        }
+        for(int j=6;j<12;j++){
+            drawable[j] = bitmapImages.get(j-6);
+        }
     }
 
     public void onButtonShowPopupWindowClick(View view) {
@@ -344,11 +342,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.restart) {
             popupWindow.dismiss();
             finish();
-            Intent intent = getIntent();
-            ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
-            int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
-
-            startActivity(intent);
+            startActivity(getIntent());
         }
         else if (id == R.id.newgame) {
             popupWindow.dismiss();

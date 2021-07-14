@@ -21,6 +21,7 @@
         </Button>
 
         <EditText
+            android:text="https://stocksnap.io/search/cat"
             android:id="@+id/ImgUrl"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/Fetch"
@@ -44,19 +45,20 @@
             android:text="0 out of 6 images selected"/>
 
         <GridView
-            android:layout_below="@+id/matches"
+            android:layout_below="@id/matches"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/gridViewImagesToChoose"
             android:numColumns="4"
             android:layout_centerHorizontal="true"
-            android:clickable="true"/>
+
+            />
 
         <ProgressBar
             android:id="@+id/bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="8"
+            android:max="20"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
             style="@android:style/Widget.ProgressBar.Horizontal"/>
@@ -65,7 +67,7 @@
             android:id="@+id/downloadingStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Downloading 0 of 8 images..."
+            android:text="Downloading 0 of 20 images..."
             android:layout_alignParentBottom="true"
             />
 
