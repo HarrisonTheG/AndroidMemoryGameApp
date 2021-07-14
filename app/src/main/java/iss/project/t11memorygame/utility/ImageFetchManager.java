@@ -8,16 +8,17 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 public class ImageFetchManager {
 
     //scrape web for the 20 img src urls
-    public static String[] getImageSrc(String url){
-        String[] imgSrc = new String[8];
+    public static ArrayList<String> getImageSrc(String url){
+        ArrayList<String> imgSrc = new ArrayList<String>();
         try{
             Document doc = Jsoup.connect(url).get();
-            for(int i=0; i< imgSrc.length; i++){
-                imgSrc[i] = doc.select("img[src^=https]").eq(i).attr("src");
+            for(int i=0; i< 8; i++){
+                imgSrc.add(doc.select("img[src^=https]").eq(i).attr("src"));
             }
         } catch (Exception e){
             e.printStackTrace();
