@@ -69,6 +69,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
 
             ImageView imageView = (ImageView) view.findViewById(R.id.grid_image_nonflip);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(250,250));
 //            imageView.setLayoutParams(new LinearLayout.LayoutParams(
 //                    RelativeLayout.LayoutParams.MATCH_PARENT,
 //                    RelativeLayout.LayoutParams.MATCH_PARENT

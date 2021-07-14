@@ -165,7 +165,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 soundPool.play(clickSound,1,1,1,0,1);
                 //for testing purpose: if you want to show popup before game ends:
-                //onButtonShowPopupWindowClick(view);
+                onButtonShowPopupWindowClick(view);
 
                 //first click
                 if (currentPosition < 0) {
@@ -231,7 +231,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             ++playerTwoScore;
 
                         //if all matched- show popup button
-                        if (countPair == drawable.length) {
+                        if (countPair == 6) {
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
                             //show popup box when you win
                             onButtonShowPopupWindowClick(view);
@@ -342,11 +342,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.restart) {
             popupWindow.dismiss();
             finish();
-            Intent intent = getIntent();
-            ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
-            int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
-
-            startActivity(intent);
+            startActivity(getIntent());
         }
         else if (id == R.id.newgame) {
             popupWindow.dismiss();

@@ -17,7 +17,7 @@ public class ImageFetchManager {
         ArrayList<String> imgSrc = new ArrayList<String>();
         try{
             Document doc = Jsoup.connect(url).get();
-            for(int i=0; i< 8; i++){
+            for(int i=0; i< 20; i++){
                 imgSrc.add(doc.select("img[src^=https]").eq(i).attr("src"));
             }
         } catch (Exception e){

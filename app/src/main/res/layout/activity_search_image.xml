@@ -58,7 +58,7 @@
             android:id="@+id/bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="8"
+            android:max="20"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
             style="@android:style/Widget.ProgressBar.Horizontal"/>
@@ -67,7 +67,7 @@
             android:id="@+id/downloadingStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Downloading 0 of 8 images..."
+            android:text="Downloading 0 of 20 images..."
             android:layout_alignParentBottom="true"
             />
 

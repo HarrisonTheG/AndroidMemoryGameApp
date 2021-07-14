@@ -59,7 +59,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import iss.project.t11memorygame.Adapter.SearchImageAdapter;
 import iss.project.t11memorygame.Adapter.SearchImageAdapterV2;
 import iss.project.t11memorygame.IClickGridItem;
 import iss.project.t11memorygame.R;
@@ -84,7 +83,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     private GridView gridView;
 
     private ProgressBar bar;
-
+    private TextView progressText;
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
 
@@ -135,17 +134,17 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
 
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.r15);
+                R.drawable.logo);
 
-    private TextView progressText;
+
 
 
         if(images.isEmpty()){
-        for(int i=0; i< 8 ; i++){
+        for(int i=0; i< 20 ; i++){
             Image image = new Image(bitmap, i);
             images.add(image);
         }} else {
-            for(int i=0; i< 8 ; i++){
+            for(int i=0; i< 20 ; i++){
                 Image image = new Image(bitmap, i);
                 images.set(i, image);
             }
@@ -231,12 +230,12 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                                         //gridView.setAdapter(imageAdapter);
                                         gridView.setAdapter(imageAdapter);
                             TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
-                            downloadingStatus.setText("Downloading "+ finalCount +" of 8 images...");
+                            downloadingStatus.setText("Downloading "+ bgCount +" of 20 images...");
                                     }
                                 });
                             }
                             bgCount++;
-                            bar.setProgress(count);
+                            bar.setProgress(bgCount);
                             try{Thread.sleep(500);}
                             catch(Exception e){}
                         }
