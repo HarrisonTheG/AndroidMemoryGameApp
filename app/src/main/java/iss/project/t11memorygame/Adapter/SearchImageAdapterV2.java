@@ -18,6 +18,7 @@ import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import java.util.ArrayList;
 
+import iss.project.t11memorygame.IClickGridItem;
 import iss.project.t11memorygame.R;
 import iss.project.t11memorygame.activity.GameActivity;
 import iss.project.t11memorygame.activity.SearchImageActivity;
@@ -28,11 +29,13 @@ public class SearchImageAdapterV2 extends BaseAdapter {
     //private ArrayList<ImageView> seleted_view = new ArrayList<>();
     private Context context;
     private LayoutInflater layoutInflater;
+    private IClickGridItem iClickGridItem;
 
     public SearchImageAdapterV2(Context context, ArrayList<Image> images) {
         this.context = context;
         this.images = images;
         this.layoutInflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        iClickGridItem = (IClickGridItem) context;
     }
 
     @Override
@@ -53,17 +56,16 @@ public class SearchImageAdapterV2 extends BaseAdapter {
     @Override
     public View getView(int pos, View view, ViewGroup viewGroup) {
 
-        final Image image = images.get(pos);
-        image.setPosID(pos);
+        //if accessing adapter on SearchImageActivity
+        if(context instanceof SearchImageActivity) {
+            final Image image = images.get(pos);
+            image.setPosID(pos);
 
-        if (view == null) {
-            //final LayoutInflater layoutInflater = LayoutInflater.from(context);
-            //final LayoutInflater layoutInflater = LayoutInflater.from(context);
-            view = layoutInflater.inflate(R.layout.gridviewimages_nonflip, viewGroup, false);
-            //view.setLayoutParams(new ViewGroup.LayoutParams(250,250));
-            //imageView = new ImageView(this.context);
+            if (view == null) {
 
-        }
+                view = layoutInflater.inflate(R.layout.gridviewimages_nonflip, viewGroup, false);
+
+            }
 
             ImageView imageView = (ImageView) view.findViewById(R.id.grid_image_nonflip);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -77,17 +79,28 @@ public class SearchImageAdapterV2 extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     imageView.setColorFilter(ContextCompat.getColor(
-                        context,
-                        R.color.purple_200),
-                        PorterDuff.Mode.SRC_OVER
+                            context,
+                            R.color.purple_200),
+                            PorterDuff.Mode.SRC_OVER
                     );
                     imageView.setClickable(false);
+                    //Delegate method to SearchImageActivity to send onClick data over
+                    iClickGridItem.onClickItem(pos);
                 }
             });
 
-        return imageView;
+            return imageView;
+        }
+        else if(context instanceof GameActivity){
 
+
+
+           // return ;
+        }
+
+        return view;
     }
+
 
 
 

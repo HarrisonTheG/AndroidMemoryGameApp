@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 
 import android.media.AudioManager;
@@ -74,16 +75,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private long elapsedMillis;
     Chronometer chronometer;
 
-    //dummy images, can remove
-//    final int[] drawable=new int[]{
-//            R.drawable.r15,
-//            R.drawable.r3,
-//            R.drawable.r1,
-//            R.drawable.monster,
-//            R.drawable.v2,
-//            R.drawable.s1000rr
-//    };
-
     //setup the images so that there is 2 with the same number
     Integer[] pos = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5};
 
@@ -94,24 +85,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        //Get the arraylist of Images chosen
+        Intent intent = getIntent();
+        Bundle args = intent.getBundleExtra("BUNDLE");
+        ArrayList<Object> images = (ArrayList<Object>) args.getSerializable("chosenImages");
 
         //get from home activity whether music is on
-        Intent intent = getIntent();
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
+
 
 
         sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
         soundMap.put(1,sp.load(this,R.raw.match,1));
         soundMap.put(2,sp.load(this,R.raw.mismatch,1));
-
-
-//        TextView tv=(TextView)findViewById(R.id.timer) ;
-//        CountDownTimer timer=new CountDownTimer(60000,1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                tv.setText(" You left "+millisUntilFinished/1000+" S ");
-//            }
 
 
         //SoundPool for click sound-effect
@@ -129,26 +116,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-          //countdown timer
-//        TextView tv=(TextView)findViewById(R.id.timer) ;
-//        new CountDownTimer(120*1000,1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                tv.setText(" You left "+String.format("0%d : %d ",
-//                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-//                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)-
-//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-//            }
-//            @Override
-//            public void onFinish() {
-//                tv.setText("Time is out");
-//            }
-//        }.start();
-
-
-
-
-
         //count-up timer
         chronometer=findViewById(R.id.timer);
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -159,7 +126,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         //get the images from the SearchImageActivity
 
         ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
-        int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
+        //Bitmap[] drawable=new Bitmap[]{};
+        //int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
 
         //shuffle the images based on the position
         List<Integer> intList = Arrays.asList(pos);

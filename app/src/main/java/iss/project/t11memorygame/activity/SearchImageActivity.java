@@ -39,6 +39,7 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -55,6 +56,7 @@ import javax.net.ssl.X509TrustManager;
 
 import iss.project.t11memorygame.Adapter.SearchImageAdapter;
 import iss.project.t11memorygame.Adapter.SearchImageAdapterV2;
+import iss.project.t11memorygame.IClickGridItem;
 import iss.project.t11memorygame.R;
 
 import iss.project.t11memorygame.model.Image;
@@ -63,7 +65,7 @@ import iss.project.t11memorygame.service.BGMusicService;
 import iss.project.t11memorygame.model.ChosenImage;
 import iss.project.t11memorygame.utility.ImageFetchManager;
 
-public class SearchImageActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection{
+public class SearchImageActivity extends AppCompatActivity implements ServiceConnection, IClickGridItem {
 
     ArrayList<Integer> chosen = new ArrayList<>();
     ArrayList<Image> images = new ArrayList<>();;
@@ -79,6 +81,7 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,61 +92,10 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
 
-        int[] drawables = {
-                R.drawable.r15,
-                R.drawable.r3,
-                R.drawable.r1,
-                R.drawable.monster,
-                R.drawable.v2,
-                R.drawable.s1000rr,
-                R.drawable.cbr1000rr,
-                R.drawable.gs1200
-        };
-
-
-
         //clear images and populate
         gridView = findViewById(R.id.gridViewImagesToChoose);
         images.clear();
         populateImageDefault();
-
-        //initialise the gridview images
-//        gridView = (GridView) findViewById(R.id.gridViewImagesToChoose);
-//        SearchImageAdapter imageAdapter = new SearchImageAdapter(this, drawables);
-//        gridView.setAdapter(imageAdapter);
-
-            //move to populate imageDefault()
-
-//            imageAdapter  = new SearchImageAdapterV2(this, images);
-//            gridView.setAdapter(imageAdapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "Tapped", Toast.LENGTH_SHORT).show();
-                //modified here
-                //ImageView image = view.findViewById(R.id.grid_image_nonflip);
-                //ViewGroup gridElement = (ViewGroup) gridView.getChildAt(position);
-                //ImageView image = (ImageView) gridElement.getChildAt(0);
-                chosen.add(position);
-                //view.setBackgroundColor(Color.GRAY);
-//                image.setColorFilter(ContextCompat.getColor(
-//                        SearchImageActivity.this,
-//                        R.color.GRAY),
-//                        PorterDuff.Mode.SRC_OVER
-//                );
-                //image.setBackgroundColor(Color.GRAY);
-                view.setBackgroundColor(Color.GRAY);
-                view.setOnClickListener(null);
-
-                TextView matchestext = findViewById(R.id.matches);
-                matchestext.setText(chosen.stream().count() + " Out of 6 images");
-                if (chosen.stream().count() == 6) {
-                    Toast.makeText(getApplicationContext(), "You have Chosen 6 Images", Toast.LENGTH_SHORT).show();
-                    onClick(view);
-                }
-            }
-        });
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);
 
@@ -182,22 +134,6 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
         imageAdapter  = new SearchImageAdapterV2(this, images);
         gridView.setAdapter(imageAdapter);
     }
-
-
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(this, GameActivity.class);
-        ChosenImage chosenones = new ChosenImage();
-        ArrayList<Integer> chosenimages = chosenones.getChoices();
-        for (Integer i : chosen) {
-            chosenimages.add(i);
-        }
-
-        intent.putExtra("images", chosenimages);
-        intent.putExtra("isMusicOn", IS_MUSIC_ON);
-        startActivity(intent);
-    }
-
 
     //this method is to disable the SSL, in case of the SSLHandShakeException
     public static void trustEveryone() {
@@ -274,11 +210,6 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
                                         imageAdapter.notifyDataSetChanged();
                                         //gridView.setAdapter(imageAdapter);
                                         gridView.setAdapter(imageAdapter);
-                                        //SystemClock.sleep(500);
-                                        //ImageView imageView = (ImageView) imageAdapter.getView(count, null, null);
-//                                        ImageView imageView = (ImageView) gridView.getChildAt(pic.getPosID());
-                                        //Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath()); //convert img to bitmap
-                                        //imageView.setImageBitmap(pic.getBitmap());
 
                                     }
                                 });
@@ -300,59 +231,38 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
             bgThread.start();
         }
 
+    //receive onClick event from SearchImageAdapterV2
+    @Override
+    public void onClickItem(int positionClick) {
+        chosen.add(positionClick);
+        TextView matchestext = findViewById(R.id.matches);
+        matchestext.setText(chosen.stream().count() + " Out of 6 images");
 
-    //code by Pan
-    //after android 9, requesting HTTP is not allowed in the main thread, so need to create a sub-thread to request for image resources
-//    Runnable runnable=new Runnable() {
-//        @Override
-//        public void run() {
-//            try {
-//                fetch();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    };
+        if(chosen.stream().count() == 6){
+            navigateToGame();
+        }
 
-    //code by Pan
-//    protected void fetch() throws IOException {
-//        String url=imgUrl.getText().toString();
-//
-//            trustEveryone();
-//            Document htmlResource = Jsoup.connect(url).get();
-//            Elements Images = htmlResource.getElementsByTag("img");
-//            int count = 0;
-//            for (Element img : Images) {
-//                String imgSrc = img.attr("src");
-//                if (!"".equals(imgSrc) && (imgSrc.startsWith("http://") || imgSrc.startsWith("https://"))) {
-//
-//                    URL imgPath = new URL(imgSrc);
-//                    HttpURLConnection conn = (HttpURLConnection) imgPath.openConnection();
-//                    conn.setConnectTimeout(5000);
-//                    conn.setRequestMethod("GET");
-//                    conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
-//                    if (conn.getResponseCode() == 200) {
-//                        System.out.println("Connection succeed");
-//                        InputStream inputStream = conn.getInputStream();
-//                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                        ImageView imageView = (ImageView) gridView.getAdapter().getView(0, null, null);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                                imageView.setImageBitmap(bitmap);
-//                            }
-//                        });
-////                    saveToInternalStorage(bitmap);
-//                        count++;
-//                    }
-//                }
-//                if (count == 8) {
-//                    break;
-//                }
-//            }
-//
-//    }
+        Toast.makeText(getApplicationContext(), "Tapped", Toast.LENGTH_SHORT).show();
+    }
+
+    //navigate to game activity
+    public void navigateToGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        ArrayList<Image> chosenImages = new ArrayList<Image>();
+
+        //send array of objects to next activity using bundle
+        Bundle args = new Bundle();
+        args.putSerializable("chosenImages",(Serializable) chosenImages);
+        intent.putExtra("bundle", args);
+
+        for (Integer i : chosen) {
+            chosenImages.add(images.get(i));
+        }
+
+        intent.putExtra("isMusicOn", IS_MUSIC_ON);
+        startActivity(intent);
+    }
+
 
 
 //-- Background Music Task
@@ -402,4 +312,5 @@ public class SearchImageActivity extends AppCompatActivity implements View.OnCli
             unbindService(this);
         images.clear();
     }
+
 }
