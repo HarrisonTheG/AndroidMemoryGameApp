@@ -103,8 +103,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         gridView = findViewById(R.id.gridViewImagesToChoose);
         images.clear();
         populateImageDefault();
-      
-        bar = findViewById(R.id.progressbar);
+
         progressText = findViewById(R.id.progressText);
 
 
