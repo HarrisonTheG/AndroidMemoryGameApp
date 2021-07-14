@@ -23,14 +23,7 @@
         android:text="Attempts: 0"
         android:typeface="sans"
         android:layout_below="@id/matches"/>
-    <Chronometer
-        android:id="@+id/timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Timer"
-        android:textSize="30dp"
 
-        android:layout_below="@id/attempts"/>
 
     <TextView
         android:id="@+id/p1score"
@@ -41,7 +34,7 @@
         android:textSize="30dp"
         android:text="P1: 0"
         android:layout_marginLeft="50px"
-        android:layout_below="@id/timer"/>
+        android:layout_below="@id/attempts"/>
 
 
     <TextView
@@ -54,7 +47,18 @@
         android:text="P2: 0"
         android:typeface="sans"
         android:layout_marginRight="50px"
-        android:layout_below="@id/timer"/>
+        android:layout_below="@id/attempts"/>
+    <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="Timer"
+        android:textSize="30dp"
+        android:layout_marginRight="50px"
+        android:layout_below="@id/matches"
+        />
 
     <GridView
         android:layout_below="@+id/p1score"
@@ -65,6 +69,11 @@
         android:numColumns="3"
         android:clickable="true"/>
 
-
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/quit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/quit"/>
 
 </RelativeLayout>

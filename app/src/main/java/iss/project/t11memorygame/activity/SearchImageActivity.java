@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,9 +39,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+
+import java.io.Serializable;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -72,11 +77,13 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     SearchImageAdapterV2 imageAdapter;
     private BGMusicService bgMusicService;
 
-    EditText imgUrl;
+    private EditText imgUrl;
 
-    Button fetchButton;
+    private Button fetchButton;
 
-    GridView gridView;
+    private GridView gridView;
+
+    private ProgressBar bar;
 
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
@@ -92,10 +99,15 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
 
+
         //clear images and populate
         gridView = findViewById(R.id.gridViewImagesToChoose);
         images.clear();
         populateImageDefault();
+      
+        bar = findViewById(R.id.progressbar);
+        progressText = findViewById(R.id.progressText);
+
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);
 
@@ -113,13 +125,20 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
             }
         });
 
+        bar=(ProgressBar) findViewById(R.id.bar);
+
+
     }
 
     //populate empty list or replace list back to original image after second search
     public void populateImageDefault(){
 
+
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.r15);
+
+    private TextView progressText;
+
 
         if(images.isEmpty()){
         for(int i=0; i< 8 ; i++){
@@ -169,6 +188,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         populateImageDefault();
         String url=imgUrl.getText().toString();
 
+
         bgThread = new Thread(new Runnable() {
             int bgCount = 0;
             @Override
@@ -210,11 +230,13 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                                         imageAdapter.notifyDataSetChanged();
                                         //gridView.setAdapter(imageAdapter);
                                         gridView.setAdapter(imageAdapter);
-
+                            TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
+                            downloadingStatus.setText("Downloading "+ finalCount +" of 8 images...");
                                     }
                                 });
                             }
                             bgCount++;
+                            bar.setProgress(count);
                             try{Thread.sleep(500);}
                             catch(Exception e){}
                         }

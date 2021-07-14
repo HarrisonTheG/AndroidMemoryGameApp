@@ -138,6 +138,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         //int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
 
+
         //shuffle the images based on the position
         List<Integer> intList = Arrays.asList(pos);
         Collections.shuffle(intList);
@@ -271,6 +272,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         setupBtns();
+
+        //Quit game button
+        quitBtn();
     }
 
     //load bitmap images
@@ -302,7 +306,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
-        PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window token
@@ -336,6 +340,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.restart) {
+            popupWindow.dismiss();
             finish();
             Intent intent = getIntent();
             ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
@@ -344,10 +349,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
         else if (id == R.id.newgame) {
+            popupWindow.dismiss();
             Intent intent = new Intent(this, HomeActivity.class);
 
             startActivity(intent);
             finish();
+        }
+    }
+
+    //Add quit button
+    protected void quitBtn() {
+        Intent quitIntent = new Intent(this, HomeActivity.class);
+
+        Button quit = findViewById(R.id.quit);
+        if (quit != null) {
+            quit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(quitIntent);
+                    finish();
+                }
+            });
         }
     }
 
