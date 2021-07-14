@@ -157,7 +157,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //get the images from the SearchImageActivity
-
         ArrayList<Integer> chosenimages = intent.getIntegerArrayListExtra("images");
         int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
 
@@ -294,6 +293,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         setupBtns();
+
+        //Quit game button
+        quitBtn();
     }
 
     public void onButtonShowPopupWindowClick(View view) {
@@ -354,6 +356,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             startActivity(intent);
             finish();
+        }
+    }
+
+    //Add quit button
+    protected void quitBtn() {
+        Intent quitIntent = new Intent(this, HomeActivity.class);
+
+        Button quit = findViewById(R.id.quit);
+        if (quit != null) {
+            quit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(quitIntent);
+                    finish();
+                }
+            });
         }
     }
 

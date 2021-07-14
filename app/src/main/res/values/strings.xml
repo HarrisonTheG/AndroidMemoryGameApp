@@ -3,4 +3,5 @@
     <string name="play">Play</string>
     <string name="best_score">Best Score: </string>
     <string name="total_games">Total games:</string>
+    <string name="quit">Quit</string>
 </resources>
