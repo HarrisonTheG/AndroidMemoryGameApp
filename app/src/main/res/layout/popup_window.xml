@@ -6,7 +6,7 @@
     android:background="@drawable/popup_rounded"
     android:shadowColor="@color/black"
     android:layout_gravity="center_vertical"
-    android:padding="12px"
+    android:padding="30px"
     >
 
     <ImageView
@@ -16,37 +16,55 @@
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
         ></ImageView>
 
     <TextView
         style="@style/popup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
         android:fontFamily="@font/bangers"
         android:text="@string/won" />
+
+    <TextView
+        android:id="@+id/completed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        android:textColor="@color/white"
+        android:text="@string/completed_game"/>
+
+    <TextView
+        android:id="@+id/endtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/white"
+        android:text="time"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/restart"
             style="@style/popupBtns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="120dp"
             android:layout_marginRight="10dp"
             android:onClick="onClick"
             android:text="@string/restart" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/newgame"
             style="@style/popupBtns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="120dp"
             android:layout_toRightOf="@+id/restart"
             android:onClick="onClick"
             android:text="@string/new_game" />

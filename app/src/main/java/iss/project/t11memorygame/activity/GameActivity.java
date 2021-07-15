@@ -42,6 +42,8 @@ import android.widget.Toast;
 
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -218,13 +220,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         //if all matched- show popup button
                         if (countPair == 6) {
                             Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
-                            //show popup box when you win
-                            onButtonShowPopupWindowClick(view);
 
                             //stop timer and save match result
                             elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+//                            String endtime = Long.toString(elapsedMillis);
                             saveUserData(elapsedMillis);
                             chronometer.stop();
+
+                            //show popup box when you win
+                            onButtonShowPopupWindowClick(view, elapsedMillis);
                         }
                     }
                     //Calculate number of attempts
@@ -282,7 +286,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void onButtonShowPopupWindowClick(View view) {
+    public void onButtonShowPopupWindowClick(View view, Long endtime) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -293,6 +297,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
         popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        //add timing achieved
+        String endtime_string = timeToString(endtime);
+        TextView popupText = popupWindow.getContentView().findViewById(R.id.endtime);
+        if (popupText != null) {
+            popupText.setText(endtime_string);
+        }
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window token
@@ -306,6 +317,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+    }
+
+    //convert long time to String
+    private String timeToString (long time){
+        int hours = (int) (time / 3600000);
+        int minutes = (int) (time - hours * 3600000) / 60000;
+        int seconds = (int) (time - hours * 3600000 - minutes * 60000) / 1000;
+        String duration = minutes + " mins " + seconds + " secs";
+        if(hours == 0)
+            return duration;
+        return hours + " hours " + duration;
     }
 
     protected void setupBtns() {

@@ -81,8 +81,9 @@
         android:id="@+id/quit"
         android:layout_marginRight="20dp"
         android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="@string/quit"/>
+        android:text="@string/quit"
+        android:layout_above="@id/timer"/>
 
 </RelativeLayout>

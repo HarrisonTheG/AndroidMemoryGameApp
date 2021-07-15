@@ -7,4 +7,5 @@
     <string name="won">You win!</string>
     <string name="restart">Restart</string>
     <string name="new_game">Home</string>
+    <string name="completed_game">You completed the game in</string>
 </resources>
