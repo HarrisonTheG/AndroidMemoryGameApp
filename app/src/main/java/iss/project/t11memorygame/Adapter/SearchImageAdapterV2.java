@@ -89,7 +89,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
                     iClickGridItem.onClickItem(pos);
                 }
             });
-            imageView.setClickable(image.isFetched());
+            imageView.setClickable(images.get(images.size()-1).isFetched());
 
             return imageView;
         }
