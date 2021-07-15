@@ -62,9 +62,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int countPair = 0;
     private EasyFlipView flipImage;
     private int numberofAttemps=0;
-    private int playerOneScore=0;
-    private int playerTwoScore=0;
-    private boolean playerOneTurn=true;
+//    private int playerOneScore=0;
+//    private int playerTwoScore=0;
+//    private boolean playerOneTurn=true;
     private SoundPool sp;
     private HashMap<Integer,Integer> soundMap=new HashMap<>();
 
@@ -139,10 +139,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         GameImageAdapter imageAdapter = new GameImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
-        if(playerOneTurn){
-            TextView p1score=findViewById(R.id.p1score);
-            p1score.setTypeface(Typeface.DEFAULT_BOLD);
-        }
+//        if(playerOneTurn){
+//            TextView p1score=findViewById(R.id.p1score);
+//            p1score.setTypeface(Typeface.DEFAULT_BOLD);
+//        }
 
 
         //Set onclicklistener for each button
@@ -200,10 +200,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                         //add match sound effect
                         sp.play(1,1,1,1,0,1);
-
-                        Toast.makeText(getApplicationContext(), "You match Curent Position:   " + currentPosition + " with " + pos[position], Toast.LENGTH_SHORT).show();
-
-
                         ((ImageView) view).setImageBitmap(drawable[pos[position]]);
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
@@ -214,10 +210,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         curView.setOnClickListener(null);
                         view.setOnClickListener(null);
 
-                        if(playerOneTurn)
-                            ++playerOneScore;
-                        else
-                            ++playerTwoScore;
+//                        if(playerOneTurn)
+//                            ++playerOneScore;
+//                        else
+//                            ++playerTwoScore;
 
                         //if all matched- show popup button
                         if (countPair == 6) {
@@ -238,25 +234,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     attempstext.setText("Total Attempts: "+numberofAttemps);
 
                     //go to p2 and set
-                    if(playerOneTurn)
-                        playerOneTurn=false;
+//                    if(playerOneTurn)
+//                        playerOneTurn=false;
+//
+//                    else
+//                        playerOneTurn=true;
 
-                    else
-                        playerOneTurn=true;
+//                    TextView p1score=findViewById(R.id.p1score);
+//                    TextView p2score=findViewById(R.id.p2score);
 
-                    TextView p1score=findViewById(R.id.p1score);
-                    TextView p2score=findViewById(R.id.p2score);
-
-                    if(playerOneTurn){
-                        p1score.setTypeface(Typeface.DEFAULT_BOLD);
-                        p2score.setTypeface(Typeface.DEFAULT);
-                        p1score.setText("P1: "+playerOneScore);
-                    }
-                    else{
-                        p2score.setTypeface(Typeface.DEFAULT_BOLD);
-                        p1score.setTypeface(Typeface.DEFAULT);
-                        p2score.setText("P2: "+playerTwoScore);
-                    }
+//                    if(playerOneTurn){
+//                        p1score.setTypeface(Typeface.DEFAULT_BOLD);
+//                        p2score.setTypeface(Typeface.DEFAULT);
+//                        p1score.setText("P1: "+playerOneScore);
+//                    }
+//                    else{
+//                        p2score.setTypeface(Typeface.DEFAULT_BOLD);
+//                        p1score.setTypeface(Typeface.DEFAULT);
+//                        p2score.setText("P2: "+playerTwoScore);
+//                    }
                 }
             }
         });

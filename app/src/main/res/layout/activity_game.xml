@@ -12,6 +12,7 @@
         android:id="@+id/matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20px"
         android:typeface="sans"
         android:text="Matches: 0 / 6"/>
 
@@ -20,34 +21,39 @@
         android:id="@+id/attempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20px"
         android:text="Attempts: 0"
         android:typeface="sans"
         android:layout_below="@id/matches"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
-    <TextView
-        style="@style/game_text"
-        android:id="@+id/p1score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="P1: 0"
-        android:layout_marginLeft="50px"
-        android:layout_below="@id/attempts"/>
+<!--    <TextView-->
+<!--        style="@style/game_text"-->
+<!--        android:id="@+id/p1score"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:text="P1: 0"-->
+<!--        android:layout_marginLeft="50px"-->
+<!--        android:layout_below="@id/attempts"/>-->
 
 
-    <TextView
-        style="@style/game_text"
-        android:id="@+id/p2score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:text="P2: 0"
-        android:typeface="sans"
-        android:layout_marginRight="50px"
-        android:layout_below="@id/attempts"/>
+<!--    <TextView-->
+<!--        style="@style/game_text"-->
+<!--        android:id="@+id/p2score"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:text="P2: 0"-->
+<!--        android:typeface="sans"-->
+<!--        android:layout_marginRight="50px"-->
+<!--        android:layout_below="@id/attempts"/>-->
 
     <Chronometer
         style="@style/game_text"
@@ -62,7 +68,7 @@
         />
 
     <GridView
-        android:layout_below="@+id/p1score"
+        android:layout_below="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:listSelector="#00343434"
