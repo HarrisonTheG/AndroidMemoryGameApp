@@ -88,8 +88,9 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
-
+    int count=0;
     private TextView valText;
+    static boolean exit=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +117,13 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
             @Override
             public void onClick(View v) {
                 try{
+                    if(count>0){
+                        exit=true;
+                    }
                 displayImg();
+                    count++;
                 System.out.println("done downloading");
+
                 }
                 catch(Exception e){
 
@@ -235,6 +241,14 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                             bar.setProgress(bgCount);
                             try{Thread.sleep(500);}
                             catch(Exception e){}
+                            
+                                if(exit==true){
+                                    Thread.currentThread().interrupt();
+                                    exit=false;
+                                    return;
+                                }
+
+
                         }
 
 
