@@ -104,8 +104,8 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         images.clear();
         populateImageDefault();
       
-        bar = findViewById(R.id.progressbar);
-        progressText = findViewById(R.id.progressText);
+        //bar = findViewById(R.id.progressbar);
+        //progressText = findViewById(R.id.progressText);
 
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);

@@ -288,6 +288,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             bitmapImages.add(bitmap);
         }
 
+        //duplicate the bitmapImages to 6 pairs before shuffling
         for(int i=0;i<6;i++){
             drawable[i] = bitmapImages.get(i);
         }
