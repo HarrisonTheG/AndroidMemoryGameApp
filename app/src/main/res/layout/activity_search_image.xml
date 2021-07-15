@@ -25,7 +25,8 @@
             android:id="@+id/ImgUrl"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/Fetch"
-            android:layout_width="fill_parent">
+            android:layout_width="fill_parent"
+            android:hint="retrieve images from URL:">
         </EditText>
 
 

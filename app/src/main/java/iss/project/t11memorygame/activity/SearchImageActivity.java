@@ -83,7 +83,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     private GridView gridView;
 
     private ProgressBar bar;
-    private TextView progressText;
+
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
 
@@ -103,9 +103,6 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         gridView = findViewById(R.id.gridViewImagesToChoose);
         images.clear();
         populateImageDefault();
-      
-        //bar = findViewById(R.id.progressbar);
-        //progressText = findViewById(R.id.progressText);
 
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);

@@ -4,4 +4,7 @@
     <string name="best_score">Best Score: </string>
     <string name="total_games">Total games:</string>
     <string name="quit">Quit</string>
+    <string name="won">You win!</string>
+    <string name="restart">Restart</string>
+    <string name="new_game">Home</string>
 </resources>
