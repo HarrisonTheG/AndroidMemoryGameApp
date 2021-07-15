@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.GameActivity"
+    android:padding="5dp"
     >
 
     <TextView
@@ -12,6 +13,7 @@
         android:id="@+id/matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="20px"
         android:typeface="sans"
         android:text="Matches: 0 / 6"/>
@@ -26,10 +28,7 @@
         android:typeface="sans"
         android:layout_below="@id/matches"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+
 
 <!--    <TextView-->
 <!--        style="@style/game_text"-->
@@ -63,7 +62,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Timer"
-        android:layout_marginRight="50px"
+        android:layout_marginRight="20dp"
         android:layout_below="@id/matches"
         />
 
@@ -71,6 +70,7 @@
         android:layout_below="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         android:listSelector="#00343434"
         android:id="@+id/gridView"
         android:numColumns="3"
@@ -79,6 +79,7 @@
     <androidx.appcompat.widget.AppCompatButton
         style="@style/quitBtn"
         android:id="@+id/quit"
+        android:layout_marginRight="20dp"
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"

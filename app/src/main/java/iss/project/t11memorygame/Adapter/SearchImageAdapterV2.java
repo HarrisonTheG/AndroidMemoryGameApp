@@ -57,7 +57,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
     public View getView(int pos, View view, ViewGroup viewGroup) {
 
         //if accessing adapter on SearchImageActivity
-        if(context instanceof SearchImageActivity) {
+
             final Image image = images.get(pos);
             image.setPosID(pos);
 
@@ -69,14 +69,11 @@ public class SearchImageAdapterV2 extends BaseAdapter {
 
             ImageView imageView = (ImageView) view.findViewById(R.id.grid_image_nonflip);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(250,250));
-//            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-//                    RelativeLayout.LayoutParams.MATCH_PARENT,
-//                    RelativeLayout.LayoutParams.MATCH_PARENT
-//            ));
-
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
             imageView.setImageBitmap(image.getBitmap());
-            imageView.setOnClickListener(new View.OnClickListener() {
+
+
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     imageView.setColorFilter(ContextCompat.getColor(
@@ -89,22 +86,11 @@ public class SearchImageAdapterV2 extends BaseAdapter {
                     iClickGridItem.onClickItem(pos);
                 }
             });
-            imageView.setClickable(images.get(images.size()-1).isFetched());
 
+            imageView.setClickable(images.get(images.size() - 1).isFetched());
             return imageView;
-        }
-        else if(context instanceof GameActivity){
-
-
-
-           // return ;
-        }
-
-        return view;
+            
     }
-
-
-
 
     public void updateItemList(ArrayList<Image> newItemList) {
         //images.clear();

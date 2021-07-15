@@ -192,7 +192,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                                 ((ImageView)view).setImageResource(R.drawable.logo);
                                 gridView.setEnabled(true);
                             }
-                        },1500);
+                        },750);
 
                     }
                     //if you click the correct image

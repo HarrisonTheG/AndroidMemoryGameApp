@@ -185,8 +185,9 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     protected void displayImg() throws IOException {
         if(bgThread != null){
             bgThread.interrupt();
+            populateImageDefault();
         }
-        populateImageDefault();
+
         String url=imgUrl.getText().toString();
 
         bgThread = new Thread(new Runnable() {
@@ -210,6 +211,17 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
                         if (!"".equals(img) && (img.startsWith("http://") || img.startsWith("https://"))) {
 
+                            if(exit==true){
+                                Thread.currentThread().interrupt();
+                                exit=false;
+                                return;
+                            }
+                            //if fully loaded, it will be as if its a fresh "fetch"
+                            if(bgCount==20){
+                                count=0;
+                                return;
+                            }
+
                             //create file and directory to save
                             File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                             File destFile = new File(dir, bgCount + ".jpg");
@@ -220,20 +232,18 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                                 images.set(bgCount, pic);
                                 imageAdapter = new SearchImageAdapterV2(SearchImageActivity.this, images);
 
-
                                 //run main UI thread activity
                                 runOnUiThread(new Runnable() { //access the UI element to set images for example
 
                                     @Override
                                     public void run() {
 
-                                        //imageAdapter.updateItemList(images);
-                                        //gridView.invalidateViews();
+                                        //redisplay the gridview with updated data
                                         imageAdapter.notifyDataSetChanged();
-                                        //gridView.setAdapter(imageAdapter);
                                         gridView.setAdapter(imageAdapter);
-                            TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
-                            downloadingStatus.setText("Downloading "+ bgCount +" of 20 images...");
+                                        //set the progress bar
+                                        TextView downloadingStatus=(TextView)findViewById(R.id.downloadingStatus);
+                                        downloadingStatus.setText("Downloading "+ bgCount +" of 20 images...");
                                     }
                                 });
                             }
@@ -245,18 +255,8 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                             //if its the 2nd time you click fetch, thread interrupt.
                             //as long as not fully loaded, the count will always be >0
                             //which means exit = true, which means interrupt thread and return
-                                if(exit==true){
-                                    Thread.currentThread().interrupt();
-                                    exit=false;
-                                    return;
-                                }
-                                //if fully loaded, it will be as if its a fresh "fetch"
-                                if(bgCount==20){
-                                    count=0;
-                                    return;
-                                }
-                        }
 
+                        }
 
                     }
                 }
