@@ -91,16 +91,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        //Get the arraylist of Images chosen
+        //Get the arraylist Integer of Images chosen before loading the bitmap
         Intent intent = getIntent();
-        //Bundle args = intent.getBundleExtra("BUNDLE");
-        //ArrayList<Image> images = (ArrayList<Image>) args.getSerializable("chosenImages");
         ArrayList<Integer> images = intent.getIntegerArrayListExtra("chosenImages");
 
         //get from home activity whether music is on
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
-
 
 
         sp = new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
@@ -121,23 +118,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         int clickSound = soundPool.load(this,R.raw.sound1,1);
 
-
-
         //count-up timer
         chronometer=findViewById(R.id.timer);
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
 
-
-
-        //get the images from the SearchImageActivity
-
         //load bitmap images from searchImageActivity
         loadBitmapImages(images);
-        //ArrayList<Bitmap> chosenimages = intent.getIntegerArrayListExtra("images");
-
-        //int[] drawable = chosenimages.stream().mapToInt(i -> i).toArray();
-
 
         //shuffle the images based on the position
         List<Integer> intList = Arrays.asList(pos);
@@ -217,8 +204,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         TextView matchestext = findViewById(R.id.matches);
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
-
-
 
 
                         //disable the onclick when its matched
@@ -405,10 +390,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         // restore
         if(bgMusicService!=null)
             bgMusicService.resume();
-//        else if(IS_MUSIC_ON) {
-//            Intent music = new Intent(this, BGMusicService.class);
-//            bindService(music, this, BIND_AUTO_CREATE);
-//        }
     }
 
     @Override
