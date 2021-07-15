@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_marginTop="10dp">
+        >
 
         <Button
             android:text="fetch"
@@ -33,12 +33,19 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/validationText"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
         android:orientation="vertical"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         >
 
         <TextView

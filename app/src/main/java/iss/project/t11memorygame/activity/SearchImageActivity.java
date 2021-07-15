@@ -3,6 +3,7 @@ package iss.project.t11memorygame.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,6 +89,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
 
+    private TextView valText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);
+        valText= (TextView) findViewById(R.id.validationText);
 
         fetchButton=(Button) findViewById(R.id.Fetch);
         fetchButton.setOnClickListener(new View.OnClickListener() {
@@ -179,15 +183,16 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         populateImageDefault();
         String url=imgUrl.getText().toString();
 
-
         bgThread = new Thread(new Runnable() {
             int bgCount = 0;
             @Override
             public void run() {
-                if (Thread.interrupted()) {
+                if (Thread.currentThread().interrupted()) {
+                    populateImageDefault();
                     return;
                 }
-                if (url != "" || url != null) {
+                //check if url is valid before downloading images
+                if (!url.isEmpty() && url != null && url != "" && URLUtil.isValidUrl(url)) {
                     trustEveryone();
                     ArrayList<String> imgUrls = ImageFetchManager.getImageSrc(url);
 
@@ -232,10 +237,16 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                             catch(Exception e){}
                         }
 
+
                     }
 
                 }
-                if (Thread.interrupted()) {
+                else {
+                    //validation of download url failed
+                    valText.setText("Invalid URL");
+                    Thread.currentThread().interrupt();
+                }
+                if (Thread.currentThread().interrupted()) {
                     return;
                 }
             }
