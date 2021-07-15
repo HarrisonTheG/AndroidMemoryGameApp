@@ -3,20 +3,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#abcdef"
+    android:background="@drawable/popup_rounded"
     android:shadowColor="@color/black"
     android:layout_gravity="center_vertical"
     android:padding="12px"
     >
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:src="@drawable/trophy"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        ></ImageView>
+
     <TextView
+        style="@style/popup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="30dp"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:text="You Won!"/>
+        android:fontFamily="@font/bangers"
+        android:text="@string/won" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -24,24 +33,23 @@
 
         <Button
             android:id="@+id/restart"
+            style="@style/popupBtns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-            android:layout_marginLeft="25dp"
+            android:layout_marginRight="10dp"
             android:onClick="onClick"
-            android:layout_weight="0.5"
-            android:text="Restart" />
+            android:text="@string/restart" />
 
         <Button
             android:id="@+id/newgame"
+            style="@style/popupBtns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/restart"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="100dp"
+            android:layout_toRightOf="@+id/restart"
             android:onClick="onClick"
-            android:layout_weight="0.5"
-            android:text="New Game" />
+            android:text="@string/new_game" />
 
     </RelativeLayout>
 </RelativeLayout>

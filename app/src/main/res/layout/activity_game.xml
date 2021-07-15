@@ -8,54 +8,55 @@
     >
 
     <TextView
+        style="@style/game_text"
         android:id="@+id/matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
         android:typeface="sans"
-        android:text="Matches: 0 /6"/>
+        android:text="Matches: 0 / 6"/>
 
     <TextView
+        style="@style/game_text"
         android:id="@+id/attempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
         android:text="Attempts: 0"
         android:typeface="sans"
         android:layout_below="@id/matches"/>
 
 
     <TextView
+        style="@style/game_text"
         android:id="@+id/p1score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="30dp"
         android:text="P1: 0"
         android:layout_marginLeft="50px"
         android:layout_below="@id/attempts"/>
 
 
     <TextView
+        style="@style/game_text"
         android:id="@+id/p2score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textSize="30dp"
         android:text="P2: 0"
         android:typeface="sans"
         android:layout_marginRight="50px"
         android:layout_below="@id/attempts"/>
+
     <Chronometer
+        style="@style/game_text"
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Timer"
-        android:textSize="30dp"
         android:layout_marginRight="50px"
         android:layout_below="@id/matches"
         />
@@ -70,9 +71,11 @@
         android:clickable="true"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        style="@style/quitBtn"
         android:id="@+id/quit"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:layout_above="@id/timer"
         android:layout_alignParentRight="true"
         android:text="@string/quit"/>
 

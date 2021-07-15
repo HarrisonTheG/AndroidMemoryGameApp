@@ -57,7 +57,7 @@
     //Play button
     <Button
         android:id="@+id/play"
-        android:background="#FF6075"
+        android:background="#BD0022"
         android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_width="128dp"
