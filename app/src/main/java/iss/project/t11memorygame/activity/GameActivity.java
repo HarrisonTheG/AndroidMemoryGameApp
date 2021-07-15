@@ -152,7 +152,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 soundPool.play(clickSound,1,1,1,0,1);
                 //for testing purpose: if you want to show popup before game ends:
-                onButtonShowPopupWindowClick(view);
+                //onButtonShowPopupWindowClick(view);
 
                 //first click
                 if (currentPosition < 0) {
@@ -181,14 +181,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         //add mismatch sound effect
                         sp.play(2,1,1,1,0,1);
                         ((ImageView)view).setImageBitmap(drawable[pos[position]]);
+                        gridView.setEnabled(false);
+
+
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 curView.setImageResource(R.drawable.logo);
                                 ((ImageView)view).setImageResource(R.drawable.logo);
+                                gridView.setEnabled(true);
                             }
-                        },300);
+                        },1500);
 
                     }
                     //if you click the correct image
