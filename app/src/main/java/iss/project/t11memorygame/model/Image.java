@@ -9,6 +9,14 @@ public class Image implements Serializable {
 
     private int posID;
 
+    private boolean fetched;
+
+    public Image(Bitmap bitmap, int id,boolean fetched) {
+        this.bitmap = bitmap;
+        this.posID = id;
+        this.fetched=fetched;
+    }
+
     public Image(Bitmap bitmap, int id) {
         this.bitmap = bitmap;
         this.posID = id;
@@ -34,4 +42,11 @@ public class Image implements Serializable {
         this.bitmap = bitmap;
     }
 
+    public boolean isFetched() {
+        return fetched;
+    }
+
+    public void setFetched(boolean fetched) {
+        this.fetched = fetched;
+    }
 }

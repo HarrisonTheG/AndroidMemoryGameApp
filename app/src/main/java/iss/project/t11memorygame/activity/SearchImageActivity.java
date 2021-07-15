@@ -123,7 +123,6 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
         bar=(ProgressBar) findViewById(R.id.bar);
 
-
     }
 
     //populate empty list or replace list back to original image after second search
@@ -138,11 +137,11 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
         if(images.isEmpty()){
         for(int i=0; i< 20 ; i++){
-            Image image = new Image(bitmap, i);
+            Image image = new Image(bitmap, i, false);
             images.add(image);
         }} else {
             for(int i=0; i< 20 ; i++){
-                Image image = new Image(bitmap, i);
+                Image image = new Image(bitmap, i, false);
                 images.set(i, image);
             }
         }
@@ -210,7 +209,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
                             //download image one by one
                             if (ImageFetchManager.downloadImage(img, destFile)) {
-                                Image pic = new Image(BitmapFactory.decodeFile(destFile.getAbsolutePath()), bgCount);
+                                Image pic = new Image(BitmapFactory.decodeFile(destFile.getAbsolutePath()), bgCount,true);
                                 images.set(bgCount, pic);
                                 imageAdapter = new SearchImageAdapterV2(SearchImageActivity.this, images);
 
@@ -281,7 +280,6 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         intent.putExtra("isMusicOn", IS_MUSIC_ON);
         startActivity(intent);
     }
-
 
 
 //-- Background Music Task
