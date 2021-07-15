@@ -129,12 +129,8 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     //populate empty list or replace list back to original image after second search
     public void populateImageDefault(){
 
-
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.logo);
-
-
-
+                R.drawable.default_image);
 
         if(images.isEmpty()){
         for(int i=0; i< 20 ; i++){

@@ -52,7 +52,8 @@
             android:id="@+id/gridViewImagesToChoose"
             android:numColumns="4"
             android:layout_centerHorizontal="true"
-
+            android:verticalSpacing="5dp"
+            android:horizontalSpacing="5dp"
             />
 
         <ProgressBar
