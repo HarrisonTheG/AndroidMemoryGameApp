@@ -88,7 +88,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
     private Boolean IS_MUSIC_ON;
     Thread bgThread;
-    int count=0;
+    static int count=0;
     private TextView valText;
     static boolean exit=false;
 
@@ -241,19 +241,24 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                             bar.setProgress(bgCount);
                             try{Thread.sleep(500);}
                             catch(Exception e){}
-                            
+
+                            //if its the 2nd time you click fetch, thread interrupt.
+                            //as long as not fully loaded, the count will always be >0
+                            //which means exit = true, which means interrupt thread and return
                                 if(exit==true){
                                     Thread.currentThread().interrupt();
                                     exit=false;
                                     return;
                                 }
-
-
+                                //if fully loaded, it will be as if its a fresh "fetch"
+                                if(bgCount==20){
+                                    count=0;
+                                    return;
+                                }
                         }
 
 
                     }
-
                 }
                 else {
                     //validation of download url failed
