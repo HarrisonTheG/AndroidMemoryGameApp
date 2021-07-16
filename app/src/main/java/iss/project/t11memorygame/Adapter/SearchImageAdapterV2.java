@@ -89,12 +89,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
 
             imageView.setClickable(images.get(images.size() - 1).isFetched());
             return imageView;
-            
+
     }
 
-    public void updateItemList(ArrayList<Image> newItemList) {
-        //images.clear();
-        this.images = newItemList;
-        notifyDataSetChanged();
-    }
 }
