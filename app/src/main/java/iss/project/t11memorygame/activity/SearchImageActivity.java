@@ -186,7 +186,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     protected void displayImg() throws IOException {
         //if user select then click fetch, reset the chosen list and reset the text to 0 selected
         chosen.clear();
-        matchestext.setText(chosen.stream().count() + " Out of 6 images");
+        matchestext.setText("Selected " + chosen.stream().count() + " Out of 6 images");
 
         if(bgThread != null){
             bgThread.interrupt();
@@ -282,7 +282,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     public void onClickItem(int positionClick) {
         chosen.add(positionClick);
 
-        matchestext.setText(chosen.stream().count() + " Out of 6 images");
+        matchestext.setText("Selected " + chosen.stream().count() + " Out of 6 images");
 
         if(chosen.stream().count() == 6){
             navigateToGame();
