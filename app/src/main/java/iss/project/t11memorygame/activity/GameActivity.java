@@ -256,15 +256,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
         popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//        popupWindow.setTouchable(false);
-//        popupWindow.setOutsideTouchable(false);
-//
-//        View button1 = popupWindow.getContentView().findViewById(R.id.newgame);
-//        Button button2 = (Button) view.findViewById(R.id.restart);
-//
-//        button1.setClickable(true);
-//        button1.setFocusableInTouchMode(true);
 
         //add timing achieved
         String endtime_string = timeToString(endtime);
