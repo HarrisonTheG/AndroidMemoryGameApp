@@ -219,7 +219,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                         //if all matched- show popup button
                         if (countPair == 6) {
-                            Toast.makeText(getApplicationContext(), "you win", Toast.LENGTH_SHORT).show();
+
 
                             //stop timer and save match result
                             elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
