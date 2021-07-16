@@ -137,7 +137,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     //Background music lifecycle and binding
     //life cycles
     @Override

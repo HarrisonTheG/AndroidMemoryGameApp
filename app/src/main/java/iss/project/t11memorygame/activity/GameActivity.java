@@ -64,9 +64,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int countPair = 0;
     private EasyFlipView flipImage;
     private int numberofAttemps=0;
-//    private int playerOneScore=0;
-//    private int playerTwoScore=0;
-//    private boolean playerOneTurn=true;
+
     private SoundPool sp;
     private HashMap<Integer,Integer> soundMap=new HashMap<>();
 
@@ -141,12 +139,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         GameImageAdapter imageAdapter = new GameImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
-//        if(playerOneTurn){
-//            TextView p1score=findViewById(R.id.p1score);
-//            p1score.setTypeface(Typeface.DEFAULT_BOLD);
-//        }
-
-
         //Set onclicklistener for each button
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -160,13 +152,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 if (currentPosition < 0) {
                     currentPosition = position;
                     curView = (ImageView) view;
-
-//                    flipImage=(EasyFlipView) findViewById(R.id.grid_image);
-//                    ImageView frontview=findViewById(R.id.front);
-//                    frontview.setImageResource(drawable[pos[position]]);
-//                    ImageView backview=findViewById(R.id.back);
-//                    backview.setImageResource(R.drawable.logo);
-//                    flipImage.flipTheView();
 
                     ((ImageView) view).setImageBitmap(drawable[pos[position]]);
 
@@ -207,15 +192,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         ++countPair;
                         matchestext.setText(countPair + "of 6 matches");
 
-
                         //disable the onclick when its matched
                         curView.setOnClickListener(null);
                         view.setOnClickListener(null);
-
-//                        if(playerOneTurn)
-//                            ++playerOneScore;
-//                        else
-//                            ++playerTwoScore;
 
                         //if all matched- show popup button
                         if (countPair == 6) {
@@ -237,26 +216,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     TextView attempstext=findViewById(R.id.attempts);
                     attempstext.setText("Total Attempts: "+numberofAttemps);
 
-                    //go to p2 and set
-//                    if(playerOneTurn)
-//                        playerOneTurn=false;
-//
-//                    else
-//                        playerOneTurn=true;
-
-//                    TextView p1score=findViewById(R.id.p1score);
-//                    TextView p2score=findViewById(R.id.p2score);
-
-//                    if(playerOneTurn){
-//                        p1score.setTypeface(Typeface.DEFAULT_BOLD);
-//                        p2score.setTypeface(Typeface.DEFAULT);
-//                        p1score.setText("P1: "+playerOneScore);
-//                    }
-//                    else{
-//                        p2score.setTypeface(Typeface.DEFAULT_BOLD);
-//                        p1score.setTypeface(Typeface.DEFAULT);
-//                        p2score.setText("P2: "+playerTwoScore);
-//                    }
                 }
             }
         });
@@ -297,6 +256,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = false; //tapping outside does not close the popout
         popupWindow = new PopupWindow(popupView, width, height, focusable);
+//
+//        popupWindow.setTouchable(false);
+//        popupWindow.setOutsideTouchable(false);
+//
+//        View button1 = popupWindow.getContentView().findViewById(R.id.newgame);
+//        Button button2 = (Button) view.findViewById(R.id.restart);
+//
+//        button1.setClickable(true);
+//        button1.setFocusableInTouchMode(true);
 
         //add timing achieved
         String endtime_string = timeToString(endtime);
@@ -344,6 +312,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //OnClick event handler for pop-up window
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -395,6 +364,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         pref = getSharedPreferences("userData", Context.MODE_PRIVATE);
         prevMatchCount = pref.getInt("totalMatch", 0);
         prevBestScore = pref.getLong("bestScore", 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 
     //Background music lifecycle and binding

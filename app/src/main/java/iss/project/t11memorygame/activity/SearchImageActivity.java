@@ -90,7 +90,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     Thread bgThread;
     static int count=0;
     private TextView valText;
-    static boolean exit=false;
+    static boolean exit;
     TextView matchestext;
 
     @Override
@@ -103,12 +103,11 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         IS_MUSIC_ON = intent.getBooleanExtra("isMusicOn", false);
         bindMusicService(IS_MUSIC_ON);
 
-
+        exit=false;
         //clear images and populate
         gridView = findViewById(R.id.gridViewImagesToChoose);
         images.clear();
         populateImageDefault();
-
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);
         valText= (TextView) findViewById(R.id.validationText);
@@ -118,10 +117,11 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
             @Override
             public void onClick(View v) {
                 try{
+
                     if(count>0){
                         exit=true;
                     }
-                displayImg();
+                    displayImg();
                     count++;
                 System.out.println("done downloading");
 
@@ -156,40 +156,17 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         gridView.setAdapter(imageAdapter);
     }
 
-    //this method is to disable the SSL, in case of the SSLHandShakeException
-    public static void trustEveryone() {
-        try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[] { new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            } }, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
-    }
-
+    //download images from URL and display in gridview
     protected void displayImg() throws IOException {
         //if user select then click fetch, reset the chosen list and reset the text to 0 selected
         chosen.clear();
         matchestext.setText("Selected " + chosen.stream().count() + " Out of 6 images");
+        valText.setText("");
 
         if(bgThread != null){
             bgThread.interrupt();
+            //sleep UI thread to let bgThread finished cleaned up
+            SystemClock.sleep(200);
             populateImageDefault();
         }
 
@@ -199,8 +176,10 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
             int bgCount = 0;
             @Override
             public void run() {
+
                 if (Thread.currentThread().interrupted()) {
                     populateImageDefault();
+                    count = 0;
                     return;
                 }
                 //check if url is valid before downloading images
@@ -254,11 +233,12 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                                 exit=false;
                                 return;
                             }
-                            //if fully loaded, it will be as if its a fresh "fetch"
-                            if(bgCount==20){
-                                count=0;
-                                return;
-                            }
+
+//                            //if fully loaded, it will be as if its a fresh "fetch"
+//                            if(bgCount==20){
+//                                count=0;
+//                                return;
+//                            }
                         }
 
                     }
@@ -300,15 +280,35 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
         for (Integer i : chosen) {
             chosenImages.add(images.get(i).getPosID());
         }
-        //send array of objects to next activity using bundle
-//        Bundle args = new Bundle();
-//        args.putSerializable("chosenImages",(Serializable) chosenImages);
-//        intent.putExtra("bundle", args);
-            intent.putExtra("chosenImages", chosenImages);
 
-
+        intent.putExtra("chosenImages", chosenImages);
         intent.putExtra("isMusicOn", IS_MUSIC_ON);
         startActivity(intent);
+    }
+
+    //this method is to disable the SSL, in case of the SSLHandShakeException
+    public static void trustEveryone() {
+        try {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new X509TrustManager[] { new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            } }, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
     }
 
 
