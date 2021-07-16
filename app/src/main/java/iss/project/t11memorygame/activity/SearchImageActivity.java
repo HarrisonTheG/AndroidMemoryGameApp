@@ -91,6 +91,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     static int count=0;
     private TextView valText;
     static boolean exit=false;
+    TextView matchestext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
         imgUrl=(EditText) findViewById(R.id.ImgUrl);
         valText= (TextView) findViewById(R.id.validationText);
-
+        matchestext = findViewById(R.id.matches);
         fetchButton=(Button) findViewById(R.id.Fetch);
         fetchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +184,10 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     }
 
     protected void displayImg() throws IOException {
+        //if user select then click fetch, reset the chosen list and reset the text to 0 selected
+        chosen.clear();
+        matchestext.setText(chosen.stream().count() + " Out of 6 images");
+
         if(bgThread != null){
             bgThread.interrupt();
             populateImageDefault();
@@ -211,17 +216,6 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
 
                         if (!"".equals(img) && (img.startsWith("http://") || img.startsWith("https://"))) {
 
-                            if(exit==true){
-                                Thread.currentThread().interrupt();
-                                exit=false;
-                                return;
-                            }
-                            //if fully loaded, it will be as if its a fresh "fetch"
-                            if(bgCount==20){
-                                count=0;
-                                return;
-                            }
-
                             //create file and directory to save
                             File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                             File destFile = new File(dir, bgCount + ".jpg");
@@ -249,13 +243,22 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                             }
                             bgCount++;
                             bar.setProgress(bgCount);
-                            try{Thread.sleep(500);}
+                            try{Thread.sleep(150);}
                             catch(Exception e){}
 
                             //if its the 2nd time you click fetch, thread interrupt.
                             //as long as not fully loaded, the count will always be >0
                             //which means exit = true, which means interrupt thread and return
-
+                            if(exit==true){
+                                Thread.currentThread().interrupt();
+                                exit=false;
+                                return;
+                            }
+                            //if fully loaded, it will be as if its a fresh "fetch"
+                            if(bgCount==20){
+                                count=0;
+                                return;
+                            }
                         }
 
                     }
@@ -278,7 +281,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
     @Override
     public void onClickItem(int positionClick) {
         chosen.add(positionClick);
-        TextView matchestext = findViewById(R.id.matches);
+
         matchestext.setText(chosen.stream().count() + " Out of 6 images");
 
         if(chosen.stream().count() == 6){

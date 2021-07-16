@@ -87,6 +87,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
                 imageView = (ImageView) view;
             }
 
+
             imageView.setImageBitmap(image.getBitmap());
             imageView.setClickable(images.get(images.size() - 1).isFetched());
 
