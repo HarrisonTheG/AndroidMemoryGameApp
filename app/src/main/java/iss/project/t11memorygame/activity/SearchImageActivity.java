@@ -269,7 +269,7 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
             navigateToGame();
         }
 
-        Toast.makeText(getApplicationContext(), "Tapped", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Fetching Images..", Toast.LENGTH_SHORT).show();
     }
 
     //navigate to game activity
