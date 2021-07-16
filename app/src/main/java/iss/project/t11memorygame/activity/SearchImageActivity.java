@@ -270,7 +270,8 @@ public class SearchImageActivity extends AppCompatActivity implements ServiceCon
                 }
             }
         } );
-
+        exit=false;
+        count=0;
             bgThread.start();
         }
 
