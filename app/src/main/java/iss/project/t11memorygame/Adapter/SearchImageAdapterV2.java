@@ -55,7 +55,7 @@ public class SearchImageAdapterV2 extends BaseAdapter {
 
     @Override
     public View getView(int pos, View view, ViewGroup viewGroup) {
-
+        ImageView imageView;
         //if accessing adapter on SearchImageActivity
 
             final Image image = images.get(pos);
@@ -65,29 +65,31 @@ public class SearchImageAdapterV2 extends BaseAdapter {
 
                 view = layoutInflater.inflate(R.layout.gridviewimages_nonflip, viewGroup, false);
 
+                imageView = (ImageView) view.findViewById(R.id.grid_image_nonflip);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        imageView.setColorFilter(ContextCompat.getColor(
+                                context,
+                                R.color.purple_200),
+                                PorterDuff.Mode.SRC_OVER
+                        );
+                        imageView.setClickable(false);
+                        //Delegate method to SearchImageActivity to send onClick data over
+                        iClickGridItem.onClickItem(pos);
+                    }
+                });
+
+            }else{
+                imageView = (ImageView) view;
             }
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.grid_image_nonflip);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(250, 250));
             imageView.setImageBitmap(image.getBitmap());
-
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    imageView.setColorFilter(ContextCompat.getColor(
-                            context,
-                            R.color.purple_200),
-                            PorterDuff.Mode.SRC_OVER
-                    );
-                    imageView.setClickable(false);
-                    //Delegate method to SearchImageActivity to send onClick data over
-                    iClickGridItem.onClickItem(pos);
-                }
-            });
-
             imageView.setClickable(images.get(images.size() - 1).isFetched());
+
             return imageView;
 
     }
